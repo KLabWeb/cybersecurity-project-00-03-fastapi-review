@@ -7,7 +7,6 @@ from enum import Enum
 app = FastAPI()
 
 class Item(BaseModel):
-    id: int
     name: str
     price: float
     is_offer: bool | None = None
@@ -20,16 +19,21 @@ class Color(str, Enum):
     GREEN = "green"
     
 test_items: list[Item] = [
-    Item(id=1, name="Apple", price=0.41, is_offer=True),
-    Item(id=2, name="Pear", price=0.49, is_offer=False),
-    Item(id=3, name="Pineapple", price=2.49, is_offer=False),
-    Item(id=4, name="Peach", price=0.57, is_offer=False)
+    Item(name="Apple", price=0.41, is_offer=True),
+    Item(name="Pear", price=0.49, is_offer=False),
+    Item(name="Pineapple", price=2.49, is_offer=False),
+    Item(name="Peach", price=0.57, is_offer=False)
 ]
     
 # Most basic GET path
 @app.get("/")
 async def read_root():
     return {"Hello": "World"}
+
+# Path which returns all items
+@app.get("/items")
+async def read_items() -> list[Item]:
+    return test_items
 
 # Path takes path parameter to ID resource
 @app.get("/items/{item_id}")
@@ -38,7 +42,7 @@ async def read_item(item_id: int, q: str | None = None):
 
 # Path which creates item via request body details
 @app.post("/items/{item_id}")
-async def create_item(item_id: int, item: Item):
+async def create_item(item: Item) -> Item:
     test_items.append(item)
     return item
 
