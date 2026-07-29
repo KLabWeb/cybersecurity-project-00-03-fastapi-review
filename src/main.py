@@ -7,6 +7,7 @@ from enum import Enum
 app = FastAPI()
 
 class Item(BaseModel):
+    id: int
     name: str
     price: float
     is_offer: bool | None = None
@@ -18,13 +19,13 @@ class Color(str, Enum):
     BLUE = "blue"
     GREEN = "green"
     
-TEST_ITEMS: list[dict] = [
-    {"name": "Apple", "price": 0.49},
-    {"name": "Pear", "price": 0.46},
-    {"name": "Plum", "price": 0.53},
-    {"name": "Pineapple", "price": 1.59},
+test_items: list[Item] = [
+    Item(id=1, name="Apple", price=0.41, is_offer=True),
+    Item(id=2, name="Pear", price=0.49, is_offer=False),
+    Item(id=3, name="Pineapple", price=2.49, is_offer=False),
+    Item(id=4, name="Peach", price=0.57, is_offer=False)
 ]
-
+    
 # Most basic GET path
 @app.get("/")
 async def read_root():
@@ -35,10 +36,16 @@ async def read_root():
 async def read_item(item_id: int, q: str | None = None):
     return {"item_id": item_id, "q": q}
 
-# Path which takes in Item as request body
+# Path which creates item via request body details
+@app.post("/items/{item_id}")
+async def create_item(item_id: int, item: Item):
+    test_items.append(item)
+    return item
+
+# Path which updates whole Item via request body details
 @app.put("/items/{item_id}")
 async def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id, "test": item.mixed_type_tuple}
+    return {"item_name": item.name, "item_id": item_id, "is_offer": item.is_offer}
 
 # Path which only allows getting specific color names
 @app.get("/item-color/{color_id}")
@@ -48,4 +55,4 @@ async def get_color(color_id: Color):
 # Path which uses a query param to filter items chepaer than max_price
 @app.get("/items/")
 async def get_cheap_items(max_price: float):
-    return list(filter(lambda item: item["price"] < max_price, TEST_ITEMS))
+    return list(filter(lambda item: item.price < max_price, test_items))
