@@ -10,7 +10,7 @@ app = FastAPI()
     
 # Most basic GET path to get root of API
 @app.get("/")
-async def read_root() -> dict[str, str]:
+async def get_root() -> dict[str, str]:
     return {"Hello": "World"}
 
 # Path which returns all items
@@ -68,7 +68,7 @@ async def set_offer_if_item_expensive(item_id: int, item: Item, expensive_price:
     existing_item = get_item_by_id(item_id)
     
     if existing_item.price > expensive_price:        
-        existing_item.is_offer = True
+        existing_item.is_offer = item.is_offer
         existing_item.price = item.price
                 
     return existing_item
