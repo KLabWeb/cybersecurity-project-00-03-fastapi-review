@@ -12,6 +12,11 @@ class Item(BaseModel):
     is_offer: bool | None = None
     mixed_type_tuple: tuple[int, int, str] | None = None
     name_to_num: dict[str, int] | None = None
+    
+class Color(str, Enum):
+    RED = "red"
+    BLUE = "blue"
+    GREEN = "green"
 
 # Most basic GET path
 @app.get("/")
@@ -27,3 +32,8 @@ async def read_item(item_id: int, q: str | None = None):
 @app.put("/items/{item_id}")
 async def update_item(item_id: int, item: Item):
     return {"item_name": item.name, "item_id": item_id, "test": item.mixed_type_tuple}
+
+# Path which only allows getting specific color names
+@app.get("/item-color/{color_id}")
+async def get_color(color_id: Color):
+    return {"color_name": color_id.name}
