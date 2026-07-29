@@ -1,43 +1,30 @@
 # main.py
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from enum import Enum
+
+from models import Item
+from data import test_items
+from models import Color
+
+from schemas import ItemQueryResponse
+from schemas import ItemUpdateResponse
 
 app = FastAPI()
-
-class Item(BaseModel):
-    id: int
-    name: str
-    price: float
-    is_offer: bool | None = None
-    
-class Color(str, Enum):
-    RED = "red"
-    BLUE = "blue"
-    GREEN = "green"
-    
-test_items: list[Item] = [
-    Item(id=1, name="Apple", price=0.41, is_offer=True),
-    Item(id=2, name="Pear", price=0.49, is_offer=False),
-    Item(id=3, name="Pineapple", price=2.49, is_offer=False),
-    Item(id=4, name="Peach", price=0.57, is_offer=False)
-]
     
 # Most basic GET path
 @app.get("/")
-async def read_root():
+async def read_root() -> dict:
     return {"Hello": "World"}
 
 # Path which returns all items
 @app.get("/items")
-async def read_items() -> list[Item]:
+async def get_items() -> list[Item]:
     return test_items
 
 # Path takes path parameter to ID resource
 @app.get("/items/{item_id}")
-async def read_item(item_id: int, q: str | None = None):
-    return {"item_id": item_id, "q": q}
+async def get_item(item_id: int, q: str | None = None) -> ItemQueryResponse:
+    return ItemQueryResponse(item_id=item_id, query=q)
 
 # Path which creates item via request body details
 @app.post("/items/{item_id}")
@@ -47,17 +34,17 @@ async def create_item(item: Item) -> Item:
 
 # Path which updates whole Item via request body details
 @app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id, "is_offer": item.is_offer}
+async def update_item(item_id: int, item: Item) -> ItemUpdateResponse:
+    return ItemUpdateResponse(item_id=item_id, item_name=item.name, is_offer=item.is_offer)
 
 # Path which only allows getting specific color names
 @app.get("/item-color/{color_id}")
-async def get_item_color(color_id: Color):
+async def get_item_color(color_id: Color) -> dict:
     return {"color_name": color_id.name}
 
 # Path which uses a query param to filter items chepaer than max_price
 @app.get("/items/")
-async def get_cheap_items(max_price: float):
+async def get_cheap_items(max_price: float) -> list[Item]:
     return list(filter(lambda item: item.price < max_price, test_items))
 
 # Path which uses path param, query param, and request body
