@@ -1,19 +1,16 @@
 # main.py
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 
-from models import Item
-from data import test_items
-from models import Color
-
-from schemas import ItemQueryResponse
-from schemas import ItemUpdateResponse
+from models import Item, Color
+from data import test_items, get_item_by_id
+from schemas import ItemQueryResponse, ItemUpdateResponse
 
 app = FastAPI()
     
-# Most basic GET path
+# Most basic GET path to get root of API
 @app.get("/")
-async def read_root() -> dict:
+async def read_root() -> dict[str, str]:
     return {"Hello": "World"}
 
 # Path which returns all items
@@ -21,13 +18,14 @@ async def read_root() -> dict:
 async def get_items() -> list[Item]:
     return test_items
 
-# Path takes path parameter to ID resource
+# Path takes path parameter to ID resource and get specific item
 @app.get("/items/{item_id}")
 async def get_item(item_id: int, q: str | None = None) -> ItemQueryResponse:
-    return ItemQueryResponse(item_id=item_id, query=q)
+    existing_item = get_item_by_id(item_id)
+    return ItemQueryResponse(item_id=existing_item.id, query=q)
 
 # Path which creates item via request body details
-@app.post("/items/{item_id}")
+@app.post("/items")
 async def create_item(item: Item) -> Item:
     test_items.append(item)
     return item
@@ -35,12 +33,27 @@ async def create_item(item: Item) -> Item:
 # Path which updates whole Item via request body details
 @app.put("/items/{item_id}")
 async def update_item(item_id: int, item: Item) -> ItemUpdateResponse:
-    return ItemUpdateResponse(item_id=item_id, item_name=item.name, is_offer=item.is_offer)
+    existing_item = get_item_by_id(item_id)
 
-# Path which only allows getting specific color names
-@app.get("/item-color/{color_id}")
-async def get_item_color(color_id: Color) -> dict:
-    return {"color_name": color_id.name}
+    existing_item.name = item.name
+    existing_item.price = item.price
+    existing_item.color = item.color
+    existing_item.is_offer = item.is_offer
+
+    return ItemUpdateResponse(
+        item_id=existing_item.id,
+        item_name=existing_item.name,
+        color=existing_item.color,
+        is_offer=existing_item.is_offer,
+    )
+
+# Path which only allows setting specific color names for updating color only
+@app.patch("/items/{item_id}/color")
+async def update_item_color(item_id: int, color: Color) -> Item:
+    existing_item = get_item_by_id(item_id)
+    existing_item.color = color
+
+    return existing_item
 
 # Path which uses a query param to filter items chepaer than max_price
 @app.get("/items/")
@@ -51,13 +64,11 @@ async def get_cheap_items(max_price: float) -> list[Item]:
 # Path param gets item, query param filters item, request body gives update data
 # Really don't need to pass in whole item here, but works for tutorial purposes
 @app.patch("/items/{item_id}")
-async def set_offer_if_item_expensive(item_id: int, item: Item, expensive_price: float) -> Item:
-    for test_item in test_items:
-        if test_item.id == item_id:
-            if test_item.price > expensive_price:        
-                test_item.is_offer = True
-                test_item.price = item.price
+async def set_offer_if_item_expensive(item_id: int, item: Item, expensive_price: float) -> Item:    
+    existing_item = get_item_by_id(item_id)
+    
+    if existing_item.price > expensive_price:        
+        existing_item.is_offer = True
+        existing_item.price = item.price
                 
-            return test_item
-        
-    raise HTTPException(status_code=404, detail="Item not found")
+    return existing_item
