@@ -36,6 +36,12 @@ async def read_root():
 async def read_item(item_id: int, q: str | None = None):
     return {"item_id": item_id, "q": q}
 
+# Path which creates item via request body details
+@app.post("/items/{item_id}")
+async def create_item(item_id: int, item: Item):
+    test_items.append(item)
+    return item
+
 # Path which updates whole Item via request body details
 @app.put("/items/{item_id}")
 async def update_item(item_id: int, item: Item):
