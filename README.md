@@ -1,4 +1,4 @@
-# Phase 0: FastAPI Documentation Refresher API
+# Phase 0: FastAPI Review - Official Docs Refresher API
 
 This is the app I am building as I read and work through the remainder of the [FastAPI tutorial](https://fastapi.tiangolo.com/tutorial/) I did not complete while at my previous full-stack software engineer role as a refresher and wrap-up.
 
