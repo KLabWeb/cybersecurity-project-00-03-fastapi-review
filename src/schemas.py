@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from models import Color
+from models import Item
 
 class ItemQueryResponse(BaseModel):
     item_id: int
@@ -11,3 +12,6 @@ class ItemUpdateResponse(BaseModel):
     color: Color | None = None
     is_offer: bool | None = None
     
+class ItemDebug(BaseModel):
+    items: list[Item]
+    query: str

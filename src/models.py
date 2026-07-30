@@ -12,3 +12,10 @@ class Item(BaseModel):
     price: float
     color: Color | None = None
     is_offer: bool | None = None
+    
+class ItemDebug(BaseModel):
+    id: int
+    name: str
+    price: float
+    color: Color | None = None
+    is_offer: bool | None = None
