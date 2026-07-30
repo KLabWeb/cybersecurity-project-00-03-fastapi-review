@@ -1,6 +1,6 @@
+from models.item import Color, Item
+
 from pydantic import BaseModel
-from models import Color
-from models import Item
 
 
 class ItemQueryResponse(BaseModel):

@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from models import Item
+from models.item import Item
 
 test_items: list[Item] = [
     Item(id=0, name="Apple", price=0.41, is_offer=True),
@@ -14,4 +14,6 @@ def get_item_by_id(item_id: int) -> Item:
         if test_item.id == item_id:
             return test_item
 
-    raise HTTPException(status_code=404, detail="Item not found")
+    # this should not be raised here as doing so violates DDD
+    # define custom HTTPException in Item model once get to FastAPI exception handling
+    raise HTTPException(status_code=404, detail="Item not found")#

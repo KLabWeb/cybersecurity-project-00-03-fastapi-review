@@ -1,11 +1,14 @@
-# main.py
-
-from fastapi import FastAPI, Query, Path
+from fastapi import FastAPI, Query
 from typing import Annotated
 
-from models import Item, Color
-from data import test_items, get_item_by_id
-from schemas import ItemQueryResponse, ItemUpdateResponse
+from api.requests import (
+    GetItemsQueryFilter,
+    GetItemQueryFilter,
+    GetTwoItemsQueryFilter,
+)
+from api.responses import ItemQueryResponse, ItemUpdateResponse
+from models.item import Item, Color, ItemID
+from repository import test_items, get_item_by_id
 
 app = FastAPI()
 
@@ -18,22 +21,22 @@ async def get_root() -> dict[str, str]:
 
 # Path which returns all items
 @app.get("/items")
-async def get_items() -> list[Item]:
+async def get_items(
+    filter_query: Annotated[GetItemsQueryFilter, Query()],
+) -> list[Item]:
     return test_items
 
 
 # Path takes path parameter to ID resource and get specific item
-# Path validator ensures id >= 0 and id < 1,000,000,000
+# ItemID carries the bounds validation, see models/item.py
 # Regex Query validator checks if query has a least one letter
 @app.get("/items/{item_id}")
 async def get_item(
-    item_id: Annotated[int, Path(description="ID of item to get", ge=0, lt=1000000)],
-    q: Annotated[
-        str | None, Query(min_length=2, max_length=50, pattern="[a-zA-Z]")
-    ] = None,
+    item_id: ItemID,
+    q: Annotated[GetItemQueryFilter, Query()],
 ) -> ItemQueryResponse:
     existing_item = get_item_by_id(item_id)
-    return ItemQueryResponse(item_id=existing_item.id, query=q if q else None)
+    return ItemQueryResponse(item_id=existing_item.id, query=q.q if q.q else None)
 
 
 # Path which creates item via request body details
@@ -96,15 +99,6 @@ async def set_offer_if_item_expensive(
 # Obvisouly never define an endpoint like this in a real system
 @app.get("/two_items/")
 async def get_two_items(
-    q: Annotated[
-        list[int],
-        Query(
-            min_length=2,
-            max_length=2,
-            title="Size restricter query",
-            description="Ensure 2 and only 2 id are requested",
-            alias="get-too",
-        ),
-    ] = [],
+    id: Annotated[GetTwoItemsQueryFilter, Query()],
 ) -> list[Item]:
-    return [get_item_by_id(q[0]), get_item_by_id(q[1])]
+    return [get_item_by_id(id.id[0]), get_item_by_id(id.id[1])]
