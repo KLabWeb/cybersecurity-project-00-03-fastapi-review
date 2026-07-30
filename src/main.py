@@ -6,9 +6,23 @@ from api.requests import (
     GetItemQueryFilter,
     GetTwoItemsQueryFilter,
 )
-from api.responses import ItemQueryResponse, ItemUpdateResponse
+
+from api.responses import (
+    ItemQueryResponse, 
+    ItemUpdateResponse, 
+    GetPurchasesResponse
+)
+
 from models.item import Item, Color, ItemID
-from repository import test_items, get_item_by_id
+from models.purchase import Purchase
+from models.user import User
+
+from repository import (
+    test_items, 
+    get_item_by_id, 
+    get_purchases_by_user_id, 
+    get_user_by_id
+)
 
 app = FastAPI()
 
@@ -101,4 +115,21 @@ async def set_offer_if_item_expensive(
 async def get_two_items(
     id: Annotated[GetTwoItemsQueryFilter, Query()],
 ) -> list[Item]:
-    return [get_item_by_id(id.id[0]), get_item_by_id(id.id[1])]
+    return[get_item_by_id(id.id[0]), get_item_by_id(id.id[1])]
+
+
+@app.get("/purchases/{user_id}")
+async def get_purchases(user_id: int) -> GetPurchasesResponse:
+    purchases = get_purchases_by_user_id(user_id=user_id)
+
+    user = get_user_by_id(user_id=user_id)
+    items_purchased = [get_item_by_id(purchase.item_id) for purchase in purchases]
+
+    return GetPurchasesResponse(
+        user=user, 
+        items_purchased=items_purchased
+    )
+
+@app.put("/purchases/{purchase_id}")
+async def create_purchase(user: User, item: Item):
+    pass

@@ -1,4 +1,5 @@
 from models.item import Color, Item
+from models.user import User
 
 from pydantic import BaseModel
 
@@ -13,8 +14,7 @@ class ItemUpdateResponse(BaseModel):
     item_name: str
     color: Color | None = None
     is_offer: bool | None = None
-
-
-class ItemDebug(BaseModel):
-    items: list[Item]
-    query: str
+    
+class GetPurchasesResponse(BaseModel):
+    user: User
+    items_purchased: list[Item]

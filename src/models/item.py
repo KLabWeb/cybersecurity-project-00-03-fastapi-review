@@ -28,4 +28,3 @@ class Item(BaseModel):
     is_offer: bool | None = None
     created_on: date
     updated_on: date
-    tags: list[str] | None = None
