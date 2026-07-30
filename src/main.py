@@ -96,7 +96,7 @@ async def set_offer_if_item_expensive(
 
 
 # Path which gets two items using query param of list type via Query validation
-# Obvisouly never define an endpoint like this in a real system
+# Obvisouly never define an endpoint like this (to just get two items) in a real system
 @app.get("/two_items/")
 async def get_two_items(
     id: Annotated[GetTwoItemsQueryFilter, Query()],

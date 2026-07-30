@@ -1,6 +1,7 @@
 from enum import Enum
 from pydantic import BaseModel, Field
 from typing import Annotated
+from datetime import date
 
 
 class Color(str, Enum):
@@ -25,3 +26,6 @@ class Item(BaseModel):
     price: float
     color: Color | None = None
     is_offer: bool | None = None
+    created_on: date
+    updated_on: date
+    tags: list[str] | None = None
