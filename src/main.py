@@ -15,6 +15,7 @@ from api.responses import (
     CompareItemPricesResponse,
 )
 
+from models.cookie import TrackingCookie
 from models.item import Item, Color, ItemID
 from models.purchase import Purchase
 from models.user import User
@@ -38,7 +39,7 @@ app = FastAPI()
 
 # Most basic GET path to get root of API
 @app.get("/")
-async def get_root() -> dict[str, str]:
+async def get_root(tracking_cookie: Annotated[TrackingCookie, Cookie()]) -> dict[str, str]:
     return {"Hello": "World"}
 
 
