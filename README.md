@@ -4,6 +4,8 @@ This is the app I am building as I read and work through the remainder of the [F
 
 This is a big work-in-progress, and the app itself changes a lot as I go — models get reworked, files get split up, and endpoints come and go with each new chapter. This README thus tracks the tutorial and what it teaches, rather than whatever my code happens to look like at any given chapter.
 
+The API is live on Digital Ocean, which re-deploys each time I push an update to this GitHub repo. Play around with via the interactive [OpenAPI Swagger docs](https://cyb-project-00-03-fastapi-app-3qxik.ondigitalocean.app/docs) for it.
+
 ## Tutorial Progress
 
 Currently done through **section 7, Query Parameter Models**. Checked = done.
