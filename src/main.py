@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Body, Query, Path
 from typing import Annotated
 
 from api.requests import (
@@ -8,11 +8,11 @@ from api.requests import (
 )
 
 from api.responses import (
-    GetItemResponse, 
-    UpdateItemResponse, 
+    GetItemResponse,
+    UpdateItemResponse,
     GetPurchasesResponse,
     ItemPriceInfo,
-    CompareItemPricesResponse
+    CompareItemPricesResponse,
 )
 
 from models.item import Item, Color, ItemID
@@ -24,16 +24,17 @@ from repository import (
     get_items_by_id_range,
     get_items as get_all_items,
     put_item,
+    get_purchases as get_all_purchases,
     get_purchases_by_user_id,
+    put_purchase_from_item_and_user,
     get_user_by_id,
-
 )
 
 app = FastAPI()
 
 
-
 ### root endpoint ###
+
 
 # Most basic GET path to get root of API
 @app.get("/")
@@ -43,13 +44,16 @@ async def get_root() -> dict[str, str]:
 
 ### Item endpoints ###
 
+
 # Path which returns all items
 # Slices return based on offest and limit from Query request filter
 @app.get("/items")
 async def get_items(
     filter_query: Annotated[GetItemsQueryFilter, Query()],
 ) -> list[Item]:
-    return get_items_by_id_range(filter_query.offset, (filter_query.limit + filter_query.offset))
+    return get_items_by_id_range(
+        filter_query.offset, (filter_query.limit + filter_query.offset)
+    )
 
 
 # Path which gets two items using query param of list type via Query validation
@@ -60,42 +64,46 @@ async def compare_item_prices(
 ) -> CompareItemPricesResponse:
     first_item = get_item_by_id(id.id[0])
     second_item = get_item_by_id(id.id[1])
-    
+
     greater_price_item_id = (
-        first_item.id if first_item.price > second_item.price
-        else second_item.id if first_item.price < second_item.price 
-        else None
+        first_item.id
+        if first_item.price > second_item.price
+        else second_item.id if first_item.price < second_item.price else None
     )
-    
+
     return CompareItemPricesResponse(
         item_price_info=[
             ItemPriceInfo(
-                item_id=first_item.id, 
+                item_id=first_item.id,
                 item_name=first_item.name,
-                item_price=first_item.price
+                item_price=first_item.price,
             ),
             ItemPriceInfo(
-                item_id=second_item.id, 
+                item_id=second_item.id,
                 item_name=second_item.name,
-                item_price=second_item.price
-            )],        
-        greater_price_item_id=greater_price_item_id
+                item_price=second_item.price,
+            ),
+        ],
+        greater_price_item_id=greater_price_item_id,
     )
-    
-    
+
     return [get_item_by_id(id.id[0]), get_item_by_id(id.id[1])]
 
 
 # Path takes path parameter to ID resource and get specific item
-# ItemID carries the bounds validation, see models/item.py
+# ItemID carries the bounds validation via Path validation
 # Regex Query validator checks if query has a least one letter
 @app.get("/items/{item_id}")
 async def get_item(
-    item_id: ItemID,
+    item_id: Annotated[ItemID, Path()],
     q: Annotated[GetItemQueryFilter, Query()],
 ) -> GetItemResponse:
     existing_item = get_item_by_id(item_id)
-    return GetItemResponse(item_id=existing_item.id, query=q.q if q.q else None)
+    return GetItemResponse(
+        item_id=existing_item.id, 
+        item_name=existing_item.name, 
+        query=q.q if q.q else None
+    )
 
 
 # Path which creates item via request body details
@@ -154,11 +162,16 @@ async def set_offer_if_item_expensive(
     return existing_item
 
 
-
 ### Purchase endpoints ###
 
+# Path which returns all purchases
+@app.get("/purchases")
+async def get_purchases() -> list[Purchase]:
+    return get_all_purchases()
+
+
 @app.get("/purchases/{user_id}")
-async def get_purchases(user_id: int) -> GetPurchasesResponse:
+async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
     purchases = get_purchases_by_user_id(user_id=user_id)
 
     user = get_user_by_id(user_id=user_id)
@@ -167,7 +180,9 @@ async def get_purchases(user_id: int) -> GetPurchasesResponse:
     return GetPurchasesResponse(user=user, items_purchased=items_purchased)
 
 
-# Path which takes in two seperate request bodies (an Item & User)
-@app.put("/purchases/{purchase_id}")
-async def create_purchase(user: User, item: Item):
-    pass
+# Path takes in two request bodies to create Purchase (an Item & User)
+# Uses Body to pass in request body with only single primitive value
+# Don't actually need two objects passed in here, as could just pass in IDs, but works for tutorial demo purposes
+@app.put("/purchases")
+async def create_purchase_from_item_and_user(user: User, item: Item, manager_discount: Annotated[bool, Body()]) -> Purchase:
+    return put_purchase_from_item_and_user(user, item, manager_discount)

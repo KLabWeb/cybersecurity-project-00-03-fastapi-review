@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 class GetItemResponse(BaseModel):
     item_id: int
+    item_name: str
     query: str | None = None
 
 
