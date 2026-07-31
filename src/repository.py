@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from pydantic import HttpUrl
 from models.item import Item
 from models.user import User
 from models.purchase import Purchase
@@ -22,9 +23,9 @@ def get_item_by_id(item_id: int) -> Item:
     raise HTTPException(status_code=404, detail="Item not found")#
 
 test_users: list[User] = [
-    User(id=0, username="sleepycat24"),
-    User(id=1, username="grimANDfrostbitten"),
-    User(id=2, username="test-user"),
+    User(id=0, username="sleepycat24", image=None),
+    User(id=1, username="grimANDfrostbitten", image=None),
+    User(id=2, username="test-user", image=HttpUrl('http://www.google.com')),
 ]
 
 test_purchases: list[Purchase] = [

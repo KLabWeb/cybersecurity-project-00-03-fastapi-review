@@ -100,9 +100,9 @@ async def get_item(
 ) -> GetItemResponse:
     existing_item = get_item_by_id(item_id)
     return GetItemResponse(
-        item_id=existing_item.id, 
-        item_name=existing_item.name, 
-        query=q.q if q.q else None
+        item_id=existing_item.id,
+        item_name=existing_item.name,
+        query=q.q if q.q else None,
     )
 
 
@@ -115,7 +115,9 @@ async def create_item(item: Item) -> Item:
 # Path which updates whole Item via request body details
 # Also sets int to be embeded object inside request body
 @app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Annotated[Item, Body(embeded=True)]) -> UpdateItemResponse:
+async def update_item(
+    item_id: int, item: Annotated[Item, Body(embeded=True)]
+) -> UpdateItemResponse:
     existing_item = get_item_by_id(item_id)
 
     existing_item.name = item.name
@@ -165,6 +167,7 @@ async def set_offer_if_item_expensive(
 
 ### Purchase endpoints ###
 
+
 # Path which returns all purchases
 @app.get("/purchases")
 async def get_purchases() -> list[Purchase]:
@@ -185,5 +188,7 @@ async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
 # Uses Body to pass in request body with only single primitive value
 # Don't actually need two objects passed in here, as could just pass in IDs, but works for tutorial demo purposes
 @app.put("/purchases")
-async def create_purchase_from_item_and_user(user: User, item: Item, manager_discount: Annotated[bool, Body()]) -> Purchase:
+async def create_purchase_from_item_and_user(
+    user: User, item: Item, manager_discount: Annotated[bool, Body()]
+) -> Purchase:
     return put_purchase_from_item_and_user(user, item, manager_discount)

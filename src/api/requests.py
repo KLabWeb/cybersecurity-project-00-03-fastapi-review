@@ -16,6 +16,7 @@ class CompareItemsPricesQueryFilter(BaseModel):
     id: list[int] = Field(
         title="Size restricter query",
         description="Ensure 2 and only two item id are submitted for price comparison.",
+        examples=[[1, 3]],
         alias="item_id",
         min_length=2,
         max_length=2,

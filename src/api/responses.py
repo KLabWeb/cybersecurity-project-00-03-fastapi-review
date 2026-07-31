@@ -18,6 +18,7 @@ class UpdateItemResponse(BaseModel):
     
 class GetPurchasesResponse(BaseModel):
     user: User
+    # List of models
     items_purchased: list[Item]
     
     
@@ -25,7 +26,8 @@ class ItemPriceInfo(BaseModel):
     item_id: int
     item_name: str
     item_price: float
-    
+       
 class CompareItemPricesResponse(BaseModel):
+    # Model within model
     item_price_info: list[ItemPriceInfo]
     greater_price_item_id: int | None = None

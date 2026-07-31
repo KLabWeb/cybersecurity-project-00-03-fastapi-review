@@ -27,10 +27,10 @@ The core of it — defining endpoints and pulling data in from the path, the que
 ### Parameters and request models
 Grouping params into models, and pulling data out of cookies and headers instead of just the path and query.
 - [x] [Query Parameter Models](https://fastapi.tiangolo.com/tutorial/query-param-models/)
-- [ ] [Body - Multiple Parameters](https://fastapi.tiangolo.com/tutorial/body-multiple-params/)
-- [ ] [Body - Fields](https://fastapi.tiangolo.com/tutorial/body-fields/)
-- [ ] [Body - Nested Models](https://fastapi.tiangolo.com/tutorial/body-nested-models/)
-- [ ] [Declare Request Example Data](https://fastapi.tiangolo.com/tutorial/schema-extra-example/)
+- [x] [Body - Multiple Parameters](https://fastapi.tiangolo.com/tutorial/body-multiple-params/)
+- [x] [Body - Fields](https://fastapi.tiangolo.com/tutorial/body-fields/)
+- [x] [Body - Nested Models](https://fastapi.tiangolo.com/tutorial/body-nested-models/)
+- [x] [Declare Request Example Data](https://fastapi.tiangolo.com/tutorial/schema-extra-example/)
 - [ ] [Extra Data Types](https://fastapi.tiangolo.com/tutorial/extra-data-types/)
 - [ ] [Cookie Parameters](https://fastapi.tiangolo.com/tutorial/cookie-params/)
 - [ ] [Header Parameters](https://fastapi.tiangolo.com/tutorial/header-params/)

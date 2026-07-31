@@ -28,3 +28,19 @@ class Item(BaseModel):
     is_offer: bool | None = None
     created_on: date
     updated_on: date
+    
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "id": 0,
+                    "name": "Apple",
+                    "price": "0.49",
+                    "color": "red",
+                    "is_offer": False,
+                    "created_on": "2026-01-17",
+                    "updated_on": "2026-05-22",
+                }
+            ]
+        }
+    }
