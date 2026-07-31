@@ -33,7 +33,7 @@ Grouping params into models, and pulling data out of cookies and headers instead
 - [x] [Declare Request Example Data](https://fastapi.tiangolo.com/tutorial/schema-extra-example/)
 - [x] [Extra Data Types](https://fastapi.tiangolo.com/tutorial/extra-data-types/)
 - [x] [Cookie Parameters](https://fastapi.tiangolo.com/tutorial/cookie-params/)
-- [ ] [Header Parameters](https://fastapi.tiangolo.com/tutorial/header-params/)
+- [x] [Header Parameters](https://fastapi.tiangolo.com/tutorial/header-params/)
 - [ ] [Cookie Parameter Models](https://fastapi.tiangolo.com/tutorial/cookie-param-models/)
 - [ ] [Header Parameter Models](https://fastapi.tiangolo.com/tutorial/header-param-models/)
 

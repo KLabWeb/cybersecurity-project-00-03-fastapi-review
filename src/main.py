@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Body, Cookie, Query, Path
+from fastapi import FastAPI, Body, Cookie, Header, Query, Path
 from typing import Annotated
 
 from api.requests import (
@@ -93,14 +93,16 @@ async def compare_item_prices(
 # Path takes path parameter to ID resource and get specific item
 # ItemID carries the bounds validation via Path validation
 # Regex Query validator checks if query has a least one letter
+# Note how this endpoint also looks for a Cookie and Header being passed in w/ request
 @app.get("/items/{item_id}")
 async def get_item(
     item_id: Annotated[ItemID, Path()],
     q: Annotated[GetItemQueryFilter, Query()],
-    last_item_id_viewed: Annotated[int | None, Cookie()] = None
+    last_item_id_viewed: Annotated[int | None, Cookie()] = None,
+    user_agent: Annotated[str | None, Header()] = None,
 ) -> GetItemResponse:
     existing_item = get_item_by_id(item_id)
-    
+
     return GetItemResponse(
         item_id=existing_item.id,
         item_name=existing_item.name,
