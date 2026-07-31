@@ -6,6 +6,8 @@ This is a big work-in-progress, and the app itself changes a lot as I go — mod
 
 The API is live on Digital Ocean, which re-deploys each time I push an update to this GitHub repo. Play around with via the interactive [OpenAPI Swagger docs](https://cyb-project-00-03-fastapi-app-3qxik.ondigitalocean.app/docs) for it.
 
+See the notes I am taking while completing the official docs [here](https://github.com/KLabWeb/cybersecurity-notes/blob/main/Phase%2000/00-03%20FastAPI%20Notes.pdf). New notes start from section "04. Request Body" and onwards. I also updated the old notes with up-to-date info in places where the tutorial was updated.
+
 ## Tutorial Progress
 
 Currently done through **section 7, Query Parameter Models**. Checked = done.
