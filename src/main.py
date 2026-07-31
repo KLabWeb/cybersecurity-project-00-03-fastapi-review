@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Body, Query, Path
+from fastapi import FastAPI, Body, Cookie, Query, Path
 from typing import Annotated
 
 from api.requests import (
@@ -97,8 +97,10 @@ async def compare_item_prices(
 async def get_item(
     item_id: Annotated[ItemID, Path()],
     q: Annotated[GetItemQueryFilter, Query()],
+    last_item_id_viewed: Annotated[int | None, Cookie()] = None
 ) -> GetItemResponse:
     existing_item = get_item_by_id(item_id)
+    
     return GetItemResponse(
         item_id=existing_item.id,
         item_name=existing_item.name,
