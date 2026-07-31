@@ -113,8 +113,9 @@ async def create_item(item: Item) -> Item:
 
 
 # Path which updates whole Item via request body details
+# Also sets int to be embeded object inside request body
 @app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Item) -> UpdateItemResponse:
+async def update_item(item_id: int, item: Annotated[Item, Body(embeded=True)]) -> UpdateItemResponse:
     existing_item = get_item_by_id(item_id)
 
     existing_item.name = item.name
