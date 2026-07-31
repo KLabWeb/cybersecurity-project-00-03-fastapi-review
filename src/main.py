@@ -20,10 +20,13 @@ from models.purchase import Purchase
 from models.user import User
 
 from repository import (
-    test_items,
     get_item_by_id,
+    get_items_by_id_range,
+    get_items as get_all_items,
+    put_item,
     get_purchases_by_user_id,
     get_user_by_id,
+
 )
 
 app = FastAPI()
@@ -46,7 +49,7 @@ async def get_root() -> dict[str, str]:
 async def get_items(
     filter_query: Annotated[GetItemsQueryFilter, Query()],
 ) -> list[Item]:
-    return test_items[filter_query.offset : (filter_query.limit + filter_query.offset)]
+    return get_items_by_id_range(filter_query.offset, (filter_query.limit + filter_query.offset))
 
 
 # Path which gets two items using query param of list type via Query validation
@@ -98,8 +101,7 @@ async def get_item(
 # Path which creates item via request body details
 @app.post("/items")
 async def create_item(item: Item) -> Item:
-    test_items.append(item)
-    return item
+    return put_item(item)
 
 
 # Path which updates whole Item via request body details
@@ -132,7 +134,8 @@ async def update_item_color(item_id: int, color: Color) -> Item:
 # Path which uses a query param to filter items chepaer than max_price
 @app.get("/items/")
 async def get_cheap_items(max_price: float) -> list[Item]:
-    return list(filter(lambda item: item.price < max_price, test_items))
+    items = get_all_items()
+    return list(filter(lambda item: item.price < max_price, items))
 
 
 # Path which uses path param, query param, and request body
@@ -164,6 +167,7 @@ async def get_purchases(user_id: int) -> GetPurchasesResponse:
     return GetPurchasesResponse(user=user, items_purchased=items_purchased)
 
 
+# Path which takes in two seperate request bodies (an Item & User)
 @app.put("/purchases/{purchase_id}")
 async def create_purchase(user: User, item: Item):
     pass

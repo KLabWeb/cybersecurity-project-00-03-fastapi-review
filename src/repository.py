@@ -36,6 +36,16 @@ test_purchases: list[Purchase] = [
     Purchase(id=5, user_id=0, item_id=1),
 ]
 
+def get_items() -> list[Item]:
+    return test_items
+
+def get_items_by_id_range(start: int, exclusive_end: int) -> list[Item]:
+    return test_items[start:exclusive_end]
+
+def put_item(item: Item) -> Item:
+    test_items.append(item)
+    return item
+
 def get_user_by_id(user_id: int) -> User:
     for test_user in test_users:
         if test_user.id == user_id:
