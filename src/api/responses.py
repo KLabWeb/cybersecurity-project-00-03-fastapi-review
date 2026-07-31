@@ -4,12 +4,12 @@ from models.user import User
 from pydantic import BaseModel
 
 
-class ItemQueryResponse(BaseModel):
+class GetItemResponse(BaseModel):
     item_id: int
     query: str | None = None
 
 
-class ItemUpdateResponse(BaseModel):
+class UpdateItemResponse(BaseModel):
     item_id: int
     item_name: str
     color: Color | None = None
@@ -18,3 +18,13 @@ class ItemUpdateResponse(BaseModel):
 class GetPurchasesResponse(BaseModel):
     user: User
     items_purchased: list[Item]
+    
+    
+class ItemPriceInfo(BaseModel):
+    item_id: int
+    item_name: str
+    item_price: float
+    
+class CompareItemPricesResponse(BaseModel):
+    item_price_info: list[ItemPriceInfo]
+    greater_price_item_id: int | None = None

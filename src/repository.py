@@ -9,6 +9,7 @@ test_items: list[Item] = [
     Item(id=1, name="Pear", price=0.49, is_offer=False, created_on=date(2026, 4, 12), updated_on=date(2026, 5, 25)),
     Item(id=2, name="Pineapple", price=2.49, is_offer=False, created_on=date(2026, 1, 27), updated_on=date(2026, 3, 19)),
     Item(id=3, name="Peach", price=0.57, is_offer=False, created_on=date(2026, 2, 18), updated_on=date(2026, 6, 29)),
+    Item(id=4, name="Plum", price=0.49, is_offer=False, created_on=date(2026, 1, 17), updated_on=date(2026, 5, 22)),
 ]
 
 def get_item_by_id(item_id: int) -> Item:

@@ -9,14 +9,14 @@ class GetItemsQueryFilter(BaseModel):
 
 
 class GetItemQueryFilter(BaseModel):
-    q: str | None = Field(min_length=2, max_length=50, pattern="[a-zA-Z]")
+    q: str | None = Field(None,min_length=2, max_length=50, pattern="[a-zA-Z]")
 
 
-class GetTwoItemsQueryFilter(BaseModel):
+class CompareItemsPricesQueryFilter(BaseModel):
     id: list[int] = Field(
         title="Size restricter query",
-        description="Ensure 2 and only 2 id are requested",
-        alias="get-too",
+        description="Ensure 2 and only two item id are submitted for price comparison.",
+        alias="item_id",
         min_length=2,
         max_length=2,
     )
