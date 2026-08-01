@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Body, Cookie, Header, Query, Path
-from typing import Annotated
+from typing import Annotated, Any
 
 from api.requests import (
     GetItemsQueryFilter,
@@ -195,8 +195,8 @@ async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
 # Path takes in two request bodies to create Purchase (an Item & User)
 # Uses Body to pass in request body with only single primitive value
 # Don't actually need two objects passed in here, as could just pass in IDs, but works for tutorial demo purposes
-@app.put("/purchases")
+@app.put("/purchases", response_model=Purchase)
 async def create_purchase_from_item_and_user(
     user: User, item: Item, manager_discount: Annotated[bool, Body()]
-) -> Purchase:
+) -> Any:
     return put_purchase_from_item_and_user(user, item, manager_discount)

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Header
+from pydantic import BaseModel
 
 class RootHeader(BaseModel):
     model_config = {"extra": "forbid"}
