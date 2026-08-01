@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import FastAPI, Body, Cookie, Header, Query, Path
 from typing import Annotated, Any
 
@@ -12,6 +13,7 @@ from api.responses import (
     UpdateItemResponse,
     GetPurchasesResponse,
     ItemPriceInfo,
+    ItemPriceInfoMetadata,
     CompareItemPricesResponse,
 )
 
@@ -67,6 +69,8 @@ async def get_items(
 async def compare_item_prices(
     id: Annotated[CompareItemsPricesQueryFilter, Query()],
 ) -> CompareItemPricesResponse:
+    current_datetime = datetime.now()
+    
     first_item = get_item_by_id(id.id[0])
     second_item = get_item_by_id(id.id[1])
 
@@ -78,15 +82,17 @@ async def compare_item_prices(
 
     return CompareItemPricesResponse(
         item_price_info=[
-            ItemPriceInfo(
+            ItemPriceInfoMetadata(
                 item_id=first_item.id,
                 item_name=first_item.name,
                 item_price=first_item.price,
+                request_made=current_datetime,
             ),
-            ItemPriceInfo(
+            ItemPriceInfoMetadata(
                 item_id=second_item.id,
                 item_name=second_item.name,
                 item_price=second_item.price,
+                request_made=current_datetime,
             ),
         ],
         greater_price_item_id=greater_price_item_id,
