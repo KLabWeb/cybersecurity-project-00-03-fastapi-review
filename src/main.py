@@ -16,6 +16,7 @@ from api.responses import (
 )
 
 from models.cookie import TrackingCookie
+from models.header import RootHeader
 from models.item import Item, Color, ItemID
 from models.purchase import Purchase
 from models.user import User
@@ -38,13 +39,16 @@ app = FastAPI()
 
 
 # Most basic GET path to get root of API
+# Takes in ookie model and Header model
 @app.get("/")
-async def get_root(tracking_cookie: Annotated[TrackingCookie, Cookie()]) -> dict[str, str]:
+async def get_root(
+    tracking_cookie: Annotated[TrackingCookie, Cookie()],
+    header: Annotated[RootHeader, Header()],
+) -> dict[str, str]:
     return {"Hello": "World"}
 
 
 ### Item endpoints ###
-
 
 # Path which returns all items
 # Slices return based on offest and limit from Query request filter
@@ -171,7 +175,6 @@ async def set_offer_if_item_expensive(
 
 
 ### Purchase endpoints ###
-
 
 # Path which returns all purchases
 @app.get("/purchases")

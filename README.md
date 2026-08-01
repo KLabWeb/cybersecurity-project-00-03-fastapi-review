@@ -36,8 +36,8 @@ Grouping params into models, and pulling data out of cookies and headers instead
 - [x] [Extra Data Types](https://fastapi.tiangolo.com/tutorial/extra-data-types/)
 - [x] [Cookie Parameters](https://fastapi.tiangolo.com/tutorial/cookie-params/)
 - [x] [Header Parameters](https://fastapi.tiangolo.com/tutorial/header-params/)
-- [ ] [Cookie Parameter Models](https://fastapi.tiangolo.com/tutorial/cookie-param-models/)
-- [ ] [Header Parameter Models](https://fastapi.tiangolo.com/tutorial/header-param-models/)
+- [x] [Cookie Parameter Models](https://fastapi.tiangolo.com/tutorial/cookie-param-models/)
+- [x] [Header Parameter Models](https://fastapi.tiangolo.com/tutorial/header-param-models/)
 
 ### Responses
 Controlling what goes back out — the response shape, extra models, and status codes.
