@@ -43,7 +43,7 @@ Grouping params into models, and pulling data out of cookies and headers instead
 Controlling what goes back out — the response shape, extra models, and status codes.
 - [x] [Response Model - Return Type](https://fastapi.tiangolo.com/tutorial/response-model/)
 - [x] [Extra Models](https://fastapi.tiangolo.com/tutorial/extra-models/)
-- [ ] [Response Status Code](https://fastapi.tiangolo.com/tutorial/response-status-code/)
+- [x] [Response Status Code](https://fastapi.tiangolo.com/tutorial/response-status-code/)
 
 ### Forms and files
 Handling form submissions and file uploads instead of JSON bodies.
