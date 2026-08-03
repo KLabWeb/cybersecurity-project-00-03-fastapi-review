@@ -1,6 +1,6 @@
+from models.user import User
 from pydantic import BaseModel, Field
 from typing import Literal
-
 
 class GetItemsQueryFilter(BaseModel):
     limit: int = Field(100, gt=0, le=1000)
@@ -21,3 +21,20 @@ class CompareItemsPricesQueryFilter(BaseModel):
         min_length=2,
         max_length=2,
     )
+
+
+class PasswordVerificationUser(User):
+    password: str
+    
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+            {
+                    "id": 2,
+                    "username": "TomDickAndHarry",
+                    "image": "http://www.tom-site.com",
+                    "password": "badpassword"
+                }
+            ]
+        }
+    }

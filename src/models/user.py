@@ -11,7 +11,7 @@ class User(BaseModel):
             "examples": [
             {
                     "id": 2,
-                    "user_id": "TomDickAndHarry",
+                    "username": "TomDickAndHarry",
                     "image": "http://www.tom-site.com",
                 }
             ]

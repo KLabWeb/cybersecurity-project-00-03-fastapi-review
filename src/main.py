@@ -7,6 +7,7 @@ from api.requests import (
     GetItemsQueryFilter,
     GetItemQueryFilter,
     CompareItemsPricesQueryFilter,
+    PasswordVerificationUser
 )
 
 from api.responses import (
@@ -33,6 +34,7 @@ from repository import (
     get_purchases_by_user_id,
     put_purchase_from_item_and_user,
     get_user_by_id,
+    authenticate_user,
 )
 
 app = FastAPI()
@@ -199,10 +201,14 @@ async def get_purchases() -> list[Purchase]:
 async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
     purchases = get_purchases_by_user_id(user_id=user_id)
 
-    user = get_user_by_id(user_id=user_id)
+    user_record = get_user_by_id(user_id=user_id)
+    
+    if not user_record:
+        return GetPurchasesResponse(user=None, items_purchased=None)
+                            
     items_purchased = [get_item_by_id(purchase.item_id) for purchase in purchases]
 
-    return GetPurchasesResponse(user=user, items_purchased=items_purchased)
+    return GetPurchasesResponse(user=User(**user_record.model_dump()), items_purchased=items_purchased)
 
 
 # Path takes in two request bodies to create Purchase (an Item & User)
@@ -213,3 +219,9 @@ async def create_purchase_from_item_and_user(
     user: User, item: Item, manager_discount: Annotated[bool, Body()]
 ) -> Any:
     return put_purchase_from_item_and_user(user, item, manager_discount)
+
+# Do not return a bool for auth like this but a Token, instead
+# Not up to auth section in docs yet, so this works as a placeholder to demonstrate model inheritance section of docs
+@app.post("/user/verify_auth")
+async def verify_user_password(user: PasswordVerificationUser) -> bool:
+    return authenticate_user(user.id, user.password)
