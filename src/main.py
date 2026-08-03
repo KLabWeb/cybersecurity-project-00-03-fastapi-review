@@ -14,7 +14,6 @@ from api.responses import (
     GetItemResponse,
     UpdateItemResponse,
     GetPurchasesResponse,
-    ItemPriceInfo,
     ItemPriceInfoMetadata,
     CompareItemPricesResponse,
 )
@@ -131,7 +130,7 @@ async def get_item(
 
 
 # Path which creates item via request body details
-@app.post("/items")
+@app.post("/items", status_code=201)
 async def create_item(item: Item) -> Item:
     return put_item(item)
 
