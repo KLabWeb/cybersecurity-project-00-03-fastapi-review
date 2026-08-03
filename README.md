@@ -10,7 +10,7 @@ See the notes I am taking while completing the official docs [here](https://gith
 
 ## Tutorial Progress
 
-Currently done through **section 7, Query Parameter Models**. Checked = done.
+Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 19 / 43 = 44.2%
 
 ### Prereqs
 Basic python review for types and concurrency
