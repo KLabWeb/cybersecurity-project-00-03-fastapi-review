@@ -51,6 +51,7 @@ from repository import (
     get_user_by_id,
     get_user_by_username,
     authenticate_user,
+    replace_item,
 )
 
 
@@ -166,22 +167,16 @@ async def create_item(item: Item) -> Item:
 @app.put("/items/{item_id}")
 async def update_item(
     item_id: int, item: Annotated[Item, Body(embeded=True)]
-) -> UpdateItemResponse:
-    existing_item = get_item_by_id(item_id)
-    
-    if not existing_item:
+) -> UpdateItemResponse:    
+    updated_item = replace_item(item_id=item_id, item=item)
+    if not updated_item:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    existing_item.name = item.name
-    existing_item.price = item.price
-    existing_item.color = item.color
-    existing_item.is_offer = item.is_offer
-
     return UpdateItemResponse(
-        item_id=existing_item.id,
-        item_name=existing_item.name,
-        color=existing_item.color,
-        is_offer=existing_item.is_offer,
+        item_id=updated_item.id,
+        item_name=updated_item.name,
+        color=updated_item.color,
+        is_offer=updated_item.is_offer,
     )
 
 

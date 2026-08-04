@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from pydantic import BaseModel, HttpUrl
-from models.item import Item
+from models.item import Color, Item
 from models.exception import DangerousUserIDException
 from models.user import User
 from models.purchase import Purchase
@@ -93,6 +93,14 @@ def get_item_by_id(item_id: int) -> Item | None:
     return None
 
 
+def get_item_index_by_item_id(item_id: int) -> int | None:
+    for index, test_item in enumerate(test_items):
+        if test_item.id == item_id:
+            return index
+        
+    return None
+
+
 # Obviously never store plaintext passwords like this in a real application
 test_users: list[UserRecord] = [
     UserRecord(id=0, username="sleepycat24", hashed_password=get_password_hash("8&19djd81d8a219@"), image=None),
@@ -129,6 +137,16 @@ def get_items_by_id_range(start: int, exclusive_end: int) -> list[Item]:
 def put_item(item: Item) -> Item:
     test_items.append(item)
     return item
+
+def replace_item(item_id: int, item: Item) -> Item | None:
+    existing_item_index = get_item_index_by_item_id(item_id)
+
+    if existing_item_index is None:
+        return None
+
+    test_items[existing_item_index] = item
+    
+    return test_items[existing_item_index]
 
 
 def get_user_by_id(user_id: int) -> UserRecord | None:
