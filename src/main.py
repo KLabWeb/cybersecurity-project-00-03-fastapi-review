@@ -6,6 +6,7 @@ from fastapi import (
     File, 
     Form, 
     Header, 
+    HTTPException,
     Query, 
     UploadFile, 
     Path
@@ -46,6 +47,7 @@ from repository import (
     get_purchases_by_user_id,
     put_purchase_from_item_and_user,
     get_user_by_id,
+    get_user_by_username,
     authenticate_user,
 )
 
@@ -94,6 +96,10 @@ async def compare_item_prices(
     
     first_item = get_item_by_id(id.id[0])
     second_item = get_item_by_id(id.id[1])
+    
+    if not first_item or not second_item:
+        raise HTTPException(status_code=404, detail="One or both items not found")
+    
 
     greater_price_item_id = (
         first_item.id
@@ -118,10 +124,8 @@ async def compare_item_prices(
         ],
         greater_price_item_id=greater_price_item_id,
     )
-
-    return [get_item_by_id(id.id[0]), get_item_by_id(id.id[1])]
-
-
+    
+    
 # Path takes path parameter to ID resource and get specific item
 # ItemID carries the bounds validation via Path validation
 # Regex Query validator checks if query has a least one letter
@@ -134,6 +138,12 @@ async def get_item(
     user_agent: Annotated[str | None, Header()] = None,
 ) -> GetItemResponse:
     existing_item = get_item_by_id(item_id)
+
+    # Endpoint layer is in charge of HTTP communications in both responses & requests
+    # As such, if an error occurs, like cannot find Item in repo, endpoint layer raises exception
+    # And exception raised is in form that can be communicated via standard HTTP response
+    if not existing_item:
+        raise HTTPException(status_code=404, detail="Item not found")
 
     return GetItemResponse(
         item_id=existing_item.id,
@@ -155,6 +165,9 @@ async def update_item(
     item_id: int, item: Annotated[Item, Body(embeded=True)]
 ) -> UpdateItemResponse:
     existing_item = get_item_by_id(item_id)
+    
+    if not existing_item:
+        raise HTTPException(status_code=404, detail="Item not found")
 
     existing_item.name = item.name
     existing_item.price = item.price
@@ -172,7 +185,12 @@ async def update_item(
 # Path which only allows setting specific color names for updating color only
 @app.patch("/items/{item_id}/color")
 async def update_item_color(item_id: int, color: Color) -> Item:
+    
     existing_item = get_item_by_id(item_id)
+    
+    if not existing_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    
     existing_item.color = color
 
     return existing_item
@@ -193,6 +211,9 @@ async def set_offer_if_item_expensive(
     item_id: int, item: Item, expensive_price: float
 ) -> Item:
     existing_item = get_item_by_id(item_id)
+    
+    if not existing_item:
+        raise HTTPException(status_code=404, detail="Item not found")
 
     if existing_item.price > expensive_price:
         existing_item.is_offer = item.is_offer
@@ -216,9 +237,18 @@ async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
     user_record = get_user_by_id(user_id=user_id)
     
     if not user_record:
-        return GetPurchasesResponse(user=None, items_purchased=None)
+        raise HTTPException(
+            status_code=404,
+            detail="User not found",
+            headers={"X-Error": "There goes my error"},
+        )
                             
-    items_purchased = [get_item_by_id(purchase.item_id) for purchase in purchases]
+    items_purchased = []
+    
+    for purchase in purchases:
+        item = get_item_by_id(purchase.item_id)
+        if item is not None:
+            items_purchased.append(item)
 
     return GetPurchasesResponse(user=User(**user_record.model_dump()), items_purchased=items_purchased)
 
@@ -230,21 +260,42 @@ async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
 async def create_purchase_from_item_and_user(
     user: User, item: Item, manager_discount: Annotated[bool, Body()]
 ) -> Any:
+    user_record = get_user_by_id(user_id=user.id)
+    if not user_record:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    item_record = get_item_by_id(item.id)
+    if not item_record:
+        raise HTTPException(status_code=404, detail="Item not found")
+    
     return put_purchase_from_item_and_user(user, item, manager_discount)
+
 
 # Do not return a bool for auth like this but a Token, instead
 # Not up to auth section in docs yet, so this works as a placeholder to demonstrate model inheritance section of docs
 @app.post("/user/verify_auth")
 async def verify_user_password(user: PasswordVerificationUser) -> bool:
-    return authenticate_user(user.id, user.password)
+    
+    if not authenticate_user(user.id, user.password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    return True
+
 
 @app.post("/form_login")
 async def login_via_form(form_data: Annotated[LoginFormRequest, Form()]) -> LoginFormResponse:
-    return LoginFormResponse(username=LoginFormRequest.username)
+    user_record = get_user_by_username(form_data.username)
+
+    if not user_record or not authenticate_user(user_record.id, form_data.password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    return LoginFormResponse(username=form_data.username)
+
 
 @app.post("/files")
 async def create_file_in_memory(file: Annotated[bytes, File()]) -> dict[str, int]:
     return { "file_size": len(file)}
+
 
 @app.post("/spooled_files/")
 async def created_spooled_files(file: Annotated[UploadFile, File(description="Read in a spooled file")]) -> CreateSpooledFileResponse:

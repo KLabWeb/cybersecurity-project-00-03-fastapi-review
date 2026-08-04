@@ -19,9 +19,9 @@ class UpdateItemResponse(BaseModel):
 
 
 class GetPurchasesResponse(BaseModel):
-    user: User | None = None
+    user: User | None
     # List of models
-    items_purchased: list[Item] | None = None
+    items_purchased: list[Item]
 
 
 class ItemPriceInfo(BaseModel):

@@ -83,10 +83,12 @@ test_items: list[Item] = [
 ]
 
 
-def get_item_by_id(item_id: int) -> Item:
+def get_item_by_id(item_id: int) -> Item | None:
     for test_item in test_items:
         if test_item.id == item_id:
             return test_item
+        
+    return None
 
     # this should not be raised here as doing so violates DDD
     # define custom HTTPException in Item model once get to FastAPI exception handling
@@ -133,6 +135,12 @@ def put_item(item: Item) -> Item:
 def get_user_by_id(user_id: int) -> UserRecord | None:
     for test_user in test_users:
         if test_user.id == user_id:
+            return test_user
+
+
+def get_user_by_username(username: str) -> UserRecord | None:
+    for test_user in test_users:
+        if test_user.username == username:
             return test_user
 
 
