@@ -38,3 +38,9 @@ class PasswordVerificationUser(User):
             ]
         }
     }
+    
+
+class LoginFormRequest(BaseModel):
+    username: str
+    password: str
+    model_config = {"extra": "forbid"}

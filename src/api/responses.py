@@ -38,3 +38,6 @@ class CompareItemPricesResponse(BaseModel):
     # Model within model
     item_price_info: list[ItemPriceInfoMetadata]
     greater_price_item_id: int | None = None
+
+class FormLoginResponse(BaseModel):
+    username: str

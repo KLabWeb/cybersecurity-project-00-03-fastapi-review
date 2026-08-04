@@ -10,7 +10,7 @@ See the notes I am taking while completing the official docs [here](https://gith
 
 ## Tutorial Progress
 
-Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 19 / 43 = 44.2%
+Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 21 / 43 = 48.8%
 
 ### Prereqs
 Basic python review for types and concurrency
@@ -47,8 +47,8 @@ Controlling what goes back out — the response shape, extra models, and status 
 
 ### Forms and files
 Handling form submissions and file uploads instead of JSON bodies.
-- [ ] [Form Data](https://fastapi.tiangolo.com/tutorial/request-forms/)
-- [ ] [Form Models](https://fastapi.tiangolo.com/tutorial/request-form-models/)
+- [x] [Form Data](https://fastapi.tiangolo.com/tutorial/request-forms/)
+- [x] [Form Models](https://fastapi.tiangolo.com/tutorial/request-form-models/)
 - [ ] [Request Files](https://fastapi.tiangolo.com/tutorial/request-files/)
 - [ ] [Request Forms and Files](https://fastapi.tiangolo.com/tutorial/request-forms-and-files/)
 

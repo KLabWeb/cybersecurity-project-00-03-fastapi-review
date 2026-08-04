@@ -1,5 +1,5 @@
 from datetime import datetime
-from fastapi import FastAPI, Body, Cookie, Header, Query, Path
+from fastapi import FastAPI, Form, Body, Cookie, Header, Query, Path
 from fastapi.responses import RedirectResponse
 from typing import Annotated, Any
 
@@ -7,7 +7,8 @@ from api.requests import (
     GetItemsQueryFilter,
     GetItemQueryFilter,
     CompareItemsPricesQueryFilter,
-    PasswordVerificationUser
+    PasswordVerificationUser,
+    LoginFormRequest
 )
 
 from api.responses import (
@@ -16,6 +17,7 @@ from api.responses import (
     GetPurchasesResponse,
     ItemPriceInfoMetadata,
     CompareItemPricesResponse,
+    LoginFormResponse
 )
 
 from models.cookie import TrackingCookie
@@ -224,3 +226,7 @@ async def create_purchase_from_item_and_user(
 @app.post("/user/verify_auth")
 async def verify_user_password(user: PasswordVerificationUser) -> bool:
     return authenticate_user(user.id, user.password)
+
+@app.post("/form_login")
+async def form_login(form_data: Annotated[LoginFormRequest, Form()]) -> LoginFormResponse:
+    return LoginFormResponse(username=LoginFormRequest.username)
