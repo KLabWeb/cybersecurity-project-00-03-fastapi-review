@@ -19,6 +19,15 @@ ItemID = Annotated[
     ),
 ]
 
+UserID = Annotated[
+    int,
+    Field(
+        description="ID of user. ID must be between 0 and 1,000,000.",
+        ge=0,
+        lt=1000000,
+    ),
+]
+
 
 class Item(BaseModel):
     id: int

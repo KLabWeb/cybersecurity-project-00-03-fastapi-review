@@ -1,10 +1,12 @@
 from fastapi import HTTPException
 from pydantic import BaseModel, HttpUrl
 from models.item import Item
+from models.exception import DangerousUserIDException
 from models.user import User
 from models.purchase import Purchase
 from datetime import date
 from pwdlib import PasswordHash
+from random import randint
 
 class UserRecord(User):
     hashed_password: str
@@ -90,9 +92,6 @@ def get_item_by_id(item_id: int) -> Item | None:
         
     return None
 
-    # this should not be raised here as doing so violates DDD
-    # define custom HTTPException in Item model once get to FastAPI exception handling
-    raise HTTPException(status_code=404, detail="Item not found")  #
 
 # Obviously never store plaintext passwords like this in a real application
 test_users: list[UserRecord] = [
@@ -133,6 +132,11 @@ def put_item(item: Item) -> Item:
 
 
 def get_user_by_id(user_id: int) -> UserRecord | None:
+    # Mock a repo level exception occuring only some of the time
+    dangerous_number = randint(0, 10)
+    if user_id == dangerous_number:
+        raise DangerousUserIDException(user_id=user_id)
+    
     for test_user in test_users:
         if test_user.id == user_id:
             return test_user

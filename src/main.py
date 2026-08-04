@@ -9,9 +9,10 @@ from fastapi import (
     HTTPException,
     Query, 
     UploadFile, 
-    Path
+    Path,
+    Request
 )
-from fastapi.responses import RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from typing import Annotated, Any
 
 from api.requests import (
@@ -33,8 +34,9 @@ from api.responses import (
 )
 
 from models.cookie import TrackingCookie
+from models.exception import DangerousUserIDException
 from models.header import RootHeader
-from models.item import Item, Color, ItemID
+from models.item import Item, Color, ItemID, UserID
 from models.purchase import Purchase
 from models.user import User
 
@@ -50,6 +52,7 @@ from repository import (
     get_user_by_username,
     authenticate_user,
 )
+
 
 app = FastAPI()
 
@@ -270,10 +273,18 @@ async def create_purchase_from_item_and_user(
     
     return put_purchase_from_item_and_user(user, item, manager_discount)
 
+@app.get("/users/{user_id}")
+async def get_user(user_id: Annotated[UserID, Path()]) -> User:
+    existing_item = get_user_by_id(user_id)
+
+    if not existing_item:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return existing_item
 
 # Do not return a bool for auth like this but a Token, instead
 # Not up to auth section in docs yet, so this works as a placeholder to demonstrate model inheritance section of docs
-@app.post("/user/verify_auth")
+@app.post("/users/verify_auth")
 async def verify_user_password(user: PasswordVerificationUser) -> bool:
     
     if not authenticate_user(user.id, user.password):
@@ -281,7 +292,7 @@ async def verify_user_password(user: PasswordVerificationUser) -> bool:
     
     return True
 
-
+# Path which reads in a Form and stores in memory
 @app.post("/form_login")
 async def login_via_form(form_data: Annotated[LoginFormRequest, Form()]) -> LoginFormResponse:
     user_record = get_user_by_username(form_data.username)
@@ -291,13 +302,22 @@ async def login_via_form(form_data: Annotated[LoginFormRequest, Form()]) -> Logi
 
     return LoginFormResponse(username=form_data.username)
 
-
+# Path which reads in a File
 @app.post("/files")
 async def create_file_in_memory(file: Annotated[bytes, File()]) -> dict[str, int]:
     return { "file_size": len(file)}
 
-
+# Path which reads in a Spooled file (stored in mem until max size hit, then stored on local disk)
 @app.post("/spooled_files/")
-async def created_spooled_files(file: Annotated[UploadFile, File(description="Read in a spooled file")]) -> CreateSpooledFileResponse:
+async def created_spooled_file(file: Annotated[UploadFile, File(description="Read in a spooled file")]) -> CreateSpooledFileResponse:
     first_part_of_file = await file.read(size=250)
     return CreateSpooledFileResponse(filename=file.filename, file_start_data=first_part_of_file)
+
+# Custom exception handler for when getting an item but item is too dangerous
+# Example: can occur in repository for get_item_by_id()
+@app.exception_handler(DangerousUserIDException)
+async def dangerous_id_exception_handler(request: Request, exc: DangerousUserIDException):
+    return JSONResponse(
+        status_code=418,
+        content={"message": f"Error: user id of '{exc.user_id}' for requested user is a dangerous id. Sorry, but we can't get this user."}
+    )
