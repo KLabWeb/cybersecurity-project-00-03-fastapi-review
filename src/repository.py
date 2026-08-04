@@ -149,6 +149,18 @@ def replace_item(item_id: int, item: Item) -> Item | None:
     
     return test_items[existing_item_index]
 
+def set_offer_if_expensive(item_id: int, item: Item, expensive_price: float) -> Item | None:
+    existing_item = get_item_by_id(item_id)
+    
+    if not existing_item:
+        return None
+
+    if existing_item.price > expensive_price:
+        existing_item.is_offer = item.is_offer
+        existing_item.price = item.price
+
+    return existing_item
+
 
 def update_item_color(item_id: int, color: Color) -> Item | None:
     existing_item = get_item_by_id(item_id)

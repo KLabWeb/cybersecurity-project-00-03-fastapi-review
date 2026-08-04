@@ -52,7 +52,8 @@ from repository import (
     authenticate_user,
     replace_item,
     update_item_color as repo_update_item_color,
-    get_items_below_price
+    get_items_below_price,
+    set_offer_if_expensive
 )
 
 
@@ -102,7 +103,7 @@ async def compare_item_prices(
     first_item = get_item_by_id(id.id[0])
     second_item = get_item_by_id(id.id[1])
     
-    if not first_item or not second_item:
+    if first_item is None or second_item is None:
         raise HTTPException(status_code=404, detail="One or both items not found")
     
 
@@ -147,7 +148,7 @@ async def get_item(
     # Endpoint layer is in charge of HTTP communications in both responses & requests
     # As such, if an error occurs, like cannot find Item in repo, endpoint layer raises exception
     # And exception raised is in form that can be communicated via standard HTTP response
-    if not existing_item:
+    if existing_item is None:
         raise HTTPException(status_code=404, detail="Item not found")
 
     return GetItemResponse(
@@ -170,7 +171,7 @@ async def update_item(
     item_id: int, item: Annotated[Item, Body(embeded=True)]
 ) -> UpdateItemResponse:    
     updated_item = replace_item(item_id=item_id, item=item)
-    if not updated_item:
+    if updated_item is None:
         raise HTTPException(status_code=404, detail="Item not found")
 
     return UpdateItemResponse(
@@ -187,7 +188,7 @@ async def update_item_color(item_id: int, color: Color) -> Item:
     
     updated_item = repo_update_item_color(item_id=item_id, color=color)
     
-    if not updated_item:
+    if updated_item is None :
         raise HTTPException(status_code=404, detail="Item not found")
 
     return updated_item
@@ -206,16 +207,12 @@ async def get_cheap_items(max_price: float) -> list[Item]:
 async def set_offer_if_item_expensive(
     item_id: int, item: Item, expensive_price: float
 ) -> Item:
-    existing_item = get_item_by_id(item_id)
+    updated_item = set_offer_if_expensive(item_id=item_id, item=item, expensive_price=expensive_price)
     
-    if not existing_item:
+    if updated_item is None:
         raise HTTPException(status_code=404, detail="Item not found")
-
-    if existing_item.price > expensive_price:
-        existing_item.is_offer = item.is_offer
-        existing_item.price = item.price
-
-    return existing_item
+                            
+    return updated_item
 
 
 ### Purchase endpoints ###
@@ -232,7 +229,7 @@ async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
 
     user_record = get_user_by_id(user_id=user_id)
     
-    if not user_record:
+    if user_record is None:
         raise HTTPException(
             status_code=404,
             detail="User not found",
@@ -257,11 +254,11 @@ async def create_purchase_from_item_and_user(
     user: User, item: Item, manager_discount: Annotated[bool, Body()]
 ) -> Any:
     user_record = get_user_by_id(user_id=user.id)
-    if not user_record:
+    if user_record is None:
         raise HTTPException(status_code=404, detail="User not found")
     
     item_record = get_item_by_id(item.id)
-    if not item_record:
+    if item_record is None:
         raise HTTPException(status_code=404, detail="Item not found")
     
     return put_purchase_from_item_and_user(user, item, manager_discount)
@@ -270,7 +267,7 @@ async def create_purchase_from_item_and_user(
 async def get_user(user_id: Annotated[UserID, Path()]) -> User:
     existing_item = get_user_by_id(user_id)
 
-    if not existing_item:
+    if existing_item is None:
         raise HTTPException(status_code=404, detail="User not found")
 
     return existing_item
@@ -290,7 +287,7 @@ async def verify_user_password(user: PasswordVerificationUser) -> bool:
 async def login_via_form(form_data: Annotated[LoginFormRequest, Form()]) -> LoginFormResponse:
     user_record = get_user_by_username(form_data.username)
 
-    if not user_record or not authenticate_user(user_record.id, form_data.password):
+    if user_record is None or authenticate_user(user_record.id, form_data.password) is None:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     return LoginFormResponse(username=form_data.username)
