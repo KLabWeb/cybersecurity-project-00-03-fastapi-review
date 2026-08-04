@@ -39,5 +39,9 @@ class CompareItemPricesResponse(BaseModel):
     item_price_info: list[ItemPriceInfoMetadata]
     greater_price_item_id: int | None = None
 
-class FormLoginResponse(BaseModel):
+class LoginFormResponse(BaseModel):
     username: str
+    
+class CreateSpooledFileResponse(BaseModel):
+    filename: str | None
+    file_start_data: bytes

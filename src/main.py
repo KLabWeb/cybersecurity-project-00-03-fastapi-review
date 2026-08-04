@@ -1,5 +1,15 @@
 from datetime import datetime
-from fastapi import FastAPI, Form, Body, Cookie, Header, Query, Path
+from fastapi import (
+    FastAPI, 
+    Body, 
+    Cookie, 
+    File, 
+    Form, 
+    Header, 
+    Query, 
+    UploadFile, 
+    Path
+)
 from fastapi.responses import RedirectResponse
 from typing import Annotated, Any
 
@@ -12,6 +22,7 @@ from api.requests import (
 )
 
 from api.responses import (
+    CreateSpooledFileResponse,
     GetItemResponse,
     UpdateItemResponse,
     GetPurchasesResponse,
@@ -228,5 +239,14 @@ async def verify_user_password(user: PasswordVerificationUser) -> bool:
     return authenticate_user(user.id, user.password)
 
 @app.post("/form_login")
-async def form_login(form_data: Annotated[LoginFormRequest, Form()]) -> LoginFormResponse:
+async def login_via_form(form_data: Annotated[LoginFormRequest, Form()]) -> LoginFormResponse:
     return LoginFormResponse(username=LoginFormRequest.username)
+
+@app.post("/files")
+async def create_file_in_memory(file: Annotated[bytes, File()]) -> dict[str, int]:
+    return { "file_size": len(file)}
+
+@app.post("/spooled_files/")
+async def created_spooled_files(file: Annotated[UploadFile, File(description="Read in a spooled file")]) -> CreateSpooledFileResponse:
+    first_part_of_file = await file.read(size=250)
+    return CreateSpooledFileResponse(filename=file.filename, file_start_data=first_part_of_file)
