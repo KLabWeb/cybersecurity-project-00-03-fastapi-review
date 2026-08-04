@@ -52,6 +52,7 @@ from repository import (
     get_user_by_username,
     authenticate_user,
     replace_item,
+    update_item_color as repo_update_item_color
 )
 
 
@@ -184,14 +185,12 @@ async def update_item(
 @app.patch("/items/{item_id}/color")
 async def update_item_color(item_id: int, color: Color) -> Item:
     
-    existing_item = get_item_by_id(item_id)
+    updated_item = repo_update_item_color(item_id=item_id, color=color)
     
-    if not existing_item:
+    if not updated_item:
         raise HTTPException(status_code=404, detail="Item not found")
-    
-    existing_item.color = color
 
-    return existing_item
+    return updated_item
 
 
 # Path which uses a query param to filter items chepaer than max_price

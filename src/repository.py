@@ -138,6 +138,7 @@ def put_item(item: Item) -> Item:
     test_items.append(item)
     return item
 
+
 def replace_item(item_id: int, item: Item) -> Item | None:
     existing_item_index = get_item_index_by_item_id(item_id)
 
@@ -147,6 +148,17 @@ def replace_item(item_id: int, item: Item) -> Item | None:
     test_items[existing_item_index] = item
     
     return test_items[existing_item_index]
+
+
+def update_item_color(item_id: int, color: Color) -> Item | None:
+    existing_item = get_item_by_id(item_id)
+
+    if not existing_item:
+        return None
+
+    existing_item.color = color
+
+    return existing_item
 
 
 def get_user_by_id(user_id: int) -> UserRecord | None:
