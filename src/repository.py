@@ -126,8 +126,8 @@ test_purchases: list[Purchase] = [
 ]
 
 
-def get_items() -> list[Item]:
-    return test_items
+def get_items_below_price(max_price: float) -> list[Item]:
+    return list(filter(lambda item: item.price < max_price, test_items))
 
 
 def get_items_by_id_range(start: int, exclusive_end: int) -> list[Item]:

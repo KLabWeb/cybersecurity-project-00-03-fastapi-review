@@ -43,7 +43,6 @@ from models.user import User
 from repository import (
     get_item_by_id,
     get_items_by_id_range,
-    get_items as get_all_items,
     put_item,
     get_purchases as get_all_purchases,
     get_purchases_by_user_id,
@@ -52,7 +51,8 @@ from repository import (
     get_user_by_username,
     authenticate_user,
     replace_item,
-    update_item_color as repo_update_item_color
+    update_item_color as repo_update_item_color,
+    get_items_below_price
 )
 
 
@@ -196,8 +196,7 @@ async def update_item_color(item_id: int, color: Color) -> Item:
 # Path which uses a query param to filter items chepaer than max_price
 @app.get("/items/")
 async def get_cheap_items(max_price: float) -> list[Item]:
-    items = get_all_items()
-    return list(filter(lambda item: item.price < max_price, items))
+    return get_items_below_price(max_price=max_price)
 
 
 # Path which uses path param, query param, and request body
