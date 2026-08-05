@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -54,3 +55,10 @@ class CompareItemPricesResponse(BaseModel):
     # Model within model
     item_price_info: list[ItemPriceInfoMetadata]
     greater_price_item_id: int | None = None
+
+
+class ItemActionTags(Enum):
+    CREATE = "create"
+    READ = "read"
+    UPDATE = "update"
+    DELETE = "delete"

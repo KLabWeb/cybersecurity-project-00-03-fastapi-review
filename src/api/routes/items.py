@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Annotated
 
-from fastapi import Body, Cookie, Header, HTTPException, Path, Query
+from fastapi import Body, Cookie, Header, HTTPException, Path, Query, status
 
 from app import app
 from api.models.items import (
@@ -10,6 +10,7 @@ from api.models.items import (
     GetItemQueryFilter,
     GetItemResponse,
     GetItemsQueryFilter,
+    ItemActionTags,
     ItemPriceInfoMetadata,
     UpdateItemResponse,
 )
@@ -102,8 +103,18 @@ async def get_item(
 
 
 # Path which creates item via request body details
-@app.post("/items", status_code=201)
+# Uses status to help fine proper status code to return
+@app.post("/items", status_code=status.HTTP_201_CREATED, tags=[ItemActionTags.CREATE])
 async def create_item(item: Item) -> Item:
+    """
+    Create an item with all the information:
+
+    - **name**: each item must have a name
+    - **description**: a long description
+    - **price**: required
+    - **tax**: if the item doesn't have tax, you can omit this
+    - **tags**: a set of unique tag strings for this item
+    """
     return put_item(item)
 
 
@@ -147,7 +158,7 @@ async def get_cheap_items(max_price: float) -> list[Item]:
 # Really don't need to pass in whole item here, but works for tutorial purposes
 @app.patch("/items/{item_id}")
 async def set_offer_if_item_expensive(
-    item_id: int, item: Item, expensive_price: float
+    item_id: int, item: Item, expensive_price: float, deprecated=True
 ) -> Item:
     updated_item = set_offer_if_expensive(item_id=item_id, item=item, expensive_price=expensive_price)
 

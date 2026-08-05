@@ -13,7 +13,7 @@ class PasswordVerificationUser(User):
                     "id": 2,
                     "username": "TomDickAndHarry",
                     "image": "http://www.tom-site.com",
-                    "password": "badpassword"
+                    "password": "badpassword",
                 }
             ]
         }
