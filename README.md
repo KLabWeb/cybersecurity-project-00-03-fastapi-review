@@ -55,7 +55,7 @@ Handling form submissions and file uploads instead of JSON bodies.
 ### Errors and configuration
 Returning proper errors, configuring endpoints, encoding data, and doing partial updates.
 - [x] [Handling Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/)
-- [ ] [Path Operation Configuration](https://fastapi.tiangolo.com/tutorial/path-operation-configuration/)
+- [x] [Path Operation Configuration](https://fastapi.tiangolo.com/tutorial/path-operation-configuration/)
 - [ ] [JSON Compatible Encoder](https://fastapi.tiangolo.com/tutorial/encoder/)
 - [ ] [Body - Updates](https://fastapi.tiangolo.com/tutorial/body-updates/)
 
