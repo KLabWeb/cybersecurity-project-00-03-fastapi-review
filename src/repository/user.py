@@ -26,7 +26,7 @@ test_users: list[UserRecord] = [
 ]
 
 
-def get_user_by_id(user_id: int) -> UserRecord | None:
+def get_user_by_id(user_id: int) -> User | None:
     # Mock a repo level exception occuring only some of the time
     dangerous_number = randint(0, 10)
     if user_id == dangerous_number:
@@ -37,7 +37,18 @@ def get_user_by_id(user_id: int) -> UserRecord | None:
             return test_user
 
 
-def get_user_by_username(username: str) -> UserRecord | None:
+def get_user_by_username(username: str) -> User | None:
     for test_user in test_users:
         if test_user.username == username:
             return test_user
+        
+# Uses exclude_unset to remove default val for User set during creation time during update 
+def patch_updated_user(user_id: int, user: User) -> User | None:
+    for index, test_user in enumerate(test_users):
+        if test_user.id == user_id:
+            no_default_val_user = user.model_dump(exclude_unset=True, exclude={"id"})
+            updated_existing_user = test_user.model_copy(update=no_default_val_user)
+            test_users[index] = updated_existing_user
+            
+            return updated_existing_user
+            

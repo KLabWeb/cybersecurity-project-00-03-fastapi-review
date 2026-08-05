@@ -26,9 +26,9 @@ async def get_purchases() -> list[Purchase]:
 async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
     purchases = get_purchases_by_user_id(user_id=user_id)
 
-    user_record = get_user_by_id(user_id=user_id)
+    user = get_user_by_id(user_id=user_id)
 
-    if user_record is None:
+    if user is None:
         raise HTTPException(
             status_code=404,
             detail="User not found",
@@ -42,7 +42,7 @@ async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
         if item is not None:
             items_purchased.append(item)
 
-    return GetPurchasesResponse(user=User(**user_record.model_dump()), items_purchased=items_purchased)
+    return GetPurchasesResponse(user=user, items_purchased=items_purchased)
 
 
 # Path takes in two request bodies to create Purchase (an Item & User)
