@@ -27,7 +27,7 @@ The app is containerized with a modified config from my [Docker review project](
 I 
 ## Tutorial Progress
 
-Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 26 / 43 = 60.5%
+Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 27 / 43 = 62.8%
 
 ### Prereqs
 Basic python review for types and concurrency
