@@ -27,7 +27,7 @@ The app is containerized with a modified config from my [Docker review project](
 I 
 ## Tutorial Progress
 
-Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 24 / 43 = 58.1%
+Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 26 / 43 = 60.5%
 
 ### Prereqs
 Basic python review for types and concurrency
@@ -73,7 +73,7 @@ Handling form submissions and file uploads instead of JSON bodies.
 Returning proper errors, configuring endpoints, encoding data, and doing partial updates.
 - [x] [Handling Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/)
 - [x] [Path Operation Configuration](https://fastapi.tiangolo.com/tutorial/path-operation-configuration/)
-- [ ] [JSON Compatible Encoder](https://fastapi.tiangolo.com/tutorial/encoder/)
+- [x] [JSON Compatible Encoder](https://fastapi.tiangolo.com/tutorial/encoder/)
 - [ ] [Body - Updates](https://fastapi.tiangolo.com/tutorial/body-updates/)
 
 ### Dependencies

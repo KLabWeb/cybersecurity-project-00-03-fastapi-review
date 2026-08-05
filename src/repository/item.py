@@ -45,6 +45,9 @@ test_items: list[Item] = [
     ),
 ]
 
+def get_all_items() -> list[Item]:
+    return test_items
+
 
 def get_item_by_id(item_id: int) -> Item | None:
     for test_item in test_items:

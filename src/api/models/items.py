@@ -57,6 +57,10 @@ class CompareItemPricesResponse(BaseModel):
     greater_price_item_id: int | None = None
 
 
+class ItemsJSONResponse(BaseModel):
+    items: str
+
+
 class ItemActionTags(Enum):
     CREATE = "create"
     READ = "read"

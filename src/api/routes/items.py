@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Annotated
+import json
 
 from fastapi import Body, Cookie, Header, HTTPException, Path, Query, status
+from fastapi.encoders import jsonable_encoder
 
 from app import app
 from api.models.items import (
@@ -13,9 +15,11 @@ from api.models.items import (
     ItemActionTags,
     ItemPriceInfoMetadata,
     UpdateItemResponse,
+    ItemsJSONResponse,
 )
 from models.item import Color, Item, ItemID
 from repository.item import (
+    get_all_items,
     get_item_by_id,
     get_items_below_price,
     get_items_by_id_range,
@@ -166,3 +170,17 @@ async def set_offer_if_item_expensive(
         raise HTTPException(status_code=404, detail="Item not found")
 
     return updated_item
+
+# Uses FastAPI's jsonable_ecoder to get a json compatible obj (dict) from list[Item]
+# Then converts dict of Items and converts it into json formatted string
+@app.get("/items")
+async def get_items_as_json() -> ItemsJSONResponse:
+    items_list: list[Item] = get_all_items()
+    
+    if not items_list:
+        raise HTTPException(status_code=404, detail="No items found")
+    
+    items_dict: dict = jsonable_encoder(items_list)
+    items_str: str = json.dumps(items_dict)
+    
+    return ItemsJSONResponse(items=items_str)
