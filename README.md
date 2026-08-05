@@ -8,6 +8,23 @@ The API is live on Digital Ocean, which re-deploys each time I push an update to
 
 See the notes I am taking while completing the official docs [here](https://github.com/KLabWeb/cybersecurity-notes/blob/main/Phase%2000/00-03%20FastAPI%20Notes.pdf). New notes start from section "04. Request Body" and onwards. I also updated the old notes with up-to-date info in places where the tutorial was updated.
 
+## Design for this Project
+Concepts implemented in this API are built from what the official FastAPI docs tutorial teaches. Unlike the official docs, though, I designed this API using strict Domain-Driven Design principles and layers.
+
+- `/models` - defines domain objects (Item, User, etc.)
+- `/repository` - owns all data and all interactions with data
+- `/security` - isolates password hashing and user auth from business logic
+- `/api/models` - request and response data transfer objects (HTTP layer models)
+- `/api/routes` - API client-facing endpoints and `@app.exception_handler` (HTTP layer interface)
+- `main.py` - API entry point; imports all route modules to wire app together
+- `app.py` - creates app's FastAPI instance
+
+Each layer owns its own models, data manipulation, data interpretation, and interface. Each layer is a black box internally. The business objects define the API.
+
+## Running the API Locally
+
+The app is containerized with a modified config from my [Docker review project](https://github.com/KLabWeb/cybersecurity-project-00-04-docker-review) — Uvicorn behind a Dockerfile, and a Compose file with live-reload — so `docker compose up` runs the app, with the interactive Swagger docs at `/docs` to try out every endpoint I've built so far.
+I 
 ## Tutorial Progress
 
 Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 24 / 43 = 58.1%
@@ -84,10 +101,6 @@ Splitting into multiple files, streaming, background tasks, docs metadata, stati
 - [ ] [Static Files](https://fastapi.tiangolo.com/tutorial/static-files/)
 - [ ] [Testing](https://fastapi.tiangolo.com/tutorial/testing/)
 - [ ] [Debugging](https://fastapi.tiangolo.com/tutorial/debugging/)
-
-## Running the API Locally
-
-The app is containerized with a modified config from my [Docker review project](https://github.com/KLabWeb/cybersecurity-project-00-04-docker-review) — Uvicorn behind a Dockerfile, and a Compose file with live-reload — so `docker compose up` runs the app, with the interactive Swagger docs at `/docs` to try out every endpoint I've built so far.
 
 ## Related
 
