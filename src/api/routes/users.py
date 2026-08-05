@@ -1,10 +1,14 @@
 from typing import Annotated
 
 from fastapi import Form, HTTPException, Path, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import PlainTextResponse
 
 from app import app
-from api.models.users import LoginFormRequest, LoginFormResponse, PasswordVerificationUser
+from api.models.users import (
+    LoginFormRequest,
+    LoginFormResponse,
+    PasswordVerificationUser,
+)
 from models.exception import DangerousUserIDException
 from models.item import UserID
 from models.user import User
@@ -34,7 +38,9 @@ async def verify_user_password(user: PasswordVerificationUser) -> bool:
 
 # Path which reads in a Form and stores in memory
 @app.post("/form_login")
-async def login_via_form(form_data: Annotated[LoginFormRequest, Form()]) -> LoginFormResponse:
+async def login_via_form(
+    form_data: Annotated[LoginFormRequest, Form()],
+) -> LoginFormResponse:
     user_record = get_user_by_username(form_data.username)
 
     if user_record is None or not authenticate_user(user_record.id, form_data.password):
@@ -44,10 +50,13 @@ async def login_via_form(form_data: Annotated[LoginFormRequest, Form()]) -> Logi
 
 
 # Custom exception handler for when getting an item but item is too dangerous
+# DangerousUserIDException overrides RequestValidationError and it's @app exception handler
 # Example: can occur in repository for get_item_by_id()
 @app.exception_handler(DangerousUserIDException)
-async def dangerous_id_exception_handler(request: Request, exc: DangerousUserIDException):
-    return JSONResponse(
-        status_code=418,
-        content={"message": f"Error: user id of '{exc.user_id}' for requested user is a dangerous id. Sorry, but we can't get this user."}
-    )
+async def dangerous_id_exception_handler(
+    request: Request, exc: DangerousUserIDException
+):
+    message = "Validation errors:"
+    for error in exc.errors():
+        message += f"\nField: {error['loc']}, Error: {error['msg']}"
+    return PlainTextResponse(message, status_code=418)
