@@ -10,7 +10,7 @@ See the notes I am taking while completing the official docs [here](https://gith
 
 ## Tutorial Progress
 
-Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 24 / 43 = 55.8%
+Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 24 / 43 = 58.1%
 
 ### Prereqs
 Basic python review for types and concurrency
