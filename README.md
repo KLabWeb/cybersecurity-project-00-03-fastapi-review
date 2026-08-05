@@ -74,7 +74,7 @@ Returning proper errors, configuring endpoints, encoding data, and doing partial
 - [x] [Handling Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/)
 - [x] [Path Operation Configuration](https://fastapi.tiangolo.com/tutorial/path-operation-configuration/)
 - [x] [JSON Compatible Encoder](https://fastapi.tiangolo.com/tutorial/encoder/)
-- [ ] [Body - Updates](https://fastapi.tiangolo.com/tutorial/body-updates/)
+- [x] [Body - Updates](https://fastapi.tiangolo.com/tutorial/body-updates/)
 
 ### Dependencies
 FastAPI's dependency injection — the thing auth and a lot of shared logic get built on top of. One of the sections I actually care about for AppSec.
