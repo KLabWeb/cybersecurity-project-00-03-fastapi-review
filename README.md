@@ -10,7 +10,7 @@ See the notes I am taking while completing the official docs [here](https://gith
 
 ## Tutorial Progress
 
-Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 22 / 43 = 53.5%
+Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 24 / 43 = 55.8%
 
 ### Prereqs
 Basic python review for types and concurrency
@@ -54,7 +54,7 @@ Handling form submissions and file uploads instead of JSON bodies.
 
 ### Errors and configuration
 Returning proper errors, configuring endpoints, encoding data, and doing partial updates.
-- [ ] [Handling Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/)
+- [x] [Handling Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/)
 - [ ] [Path Operation Configuration](https://fastapi.tiangolo.com/tutorial/path-operation-configuration/)
 - [ ] [JSON Compatible Encoder](https://fastapi.tiangolo.com/tutorial/encoder/)
 - [ ] [Body - Updates](https://fastapi.tiangolo.com/tutorial/body-updates/)
