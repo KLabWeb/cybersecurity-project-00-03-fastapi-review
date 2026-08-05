@@ -122,7 +122,7 @@ async def create_item(item: Item) -> Item:
 # Also sets int to be embeded object inside request body
 @app.put("/items/{item_id}")
 async def update_item(
-    item_id: int, item: Annotated[Item, Body(embeded=True)]
+    item_id: int, item: Annotated[Item, Body(embed=True)]
 ) -> UpdateItemResponse:
     updated_item = replace_item(item_id=item_id, item=item)
     if updated_item is None:
