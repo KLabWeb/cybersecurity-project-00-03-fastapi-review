@@ -35,6 +35,8 @@ def get_user_by_id(user_id: int) -> User | None:
     for test_user in test_users:
         if test_user.id == user_id:
             return test_user
+        
+    return None
 
 
 def get_user_by_username(username: str) -> User | None:
