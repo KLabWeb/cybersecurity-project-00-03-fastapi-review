@@ -27,7 +27,7 @@ The app is containerized with a modified config from my [Docker review project](
 I 
 ## Tutorial Progress
 
-Currently done through **section 19: Response Status Code**. Checked = done. Sections completed = 27 / 43 = 62.8%
+Currently done through **section 28: Dependencies**. Checked = done. Sections completed = 30 / 52 = 57.7%
 
 ### Prereqs
 Basic python review for types and concurrency
@@ -78,11 +78,20 @@ Returning proper errors, configuring endpoints, encoding data, and doing partial
 
 ### Dependencies
 FastAPI's dependency injection — the thing auth and a lot of shared logic get built on top of. One of the sections I actually care about for AppSec.
-- [ ] [Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/) *(+ Classes as Dependencies, Sub-dependencies, Dependencies in path operation decorators, Global Dependencies, Dependencies with yield)*
+- [x] [Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/)
+- [ ] [Classes as Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/classes-as-dependencies/)
+- [ ] [Sub-dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/sub-dependencies/)
+- [ ] [Dependencies in path operation decorators](https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-in-path-operation-decorators/)
+- [ ] [Global Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/global-dependencies/)
+- [ ] [Dependencies with yield](https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-with-yield/)
 
 ### Security
 Auth from the ground up, through OAuth2 with password hashing and JWT tokens. This is the big one for me, and the foundation for the JWT work later in the study plan.
-- [ ] [Security](https://fastapi.tiangolo.com/tutorial/security/) *(+ Security First Steps, Get Current User, Simple OAuth2 with Password and Bearer, OAuth2 with Password and hashing / JWT tokens)*
+- [ ] [Security](https://fastapi.tiangolo.com/tutorial/security/)
+- [ ] [Security - First Steps](https://fastapi.tiangolo.com/tutorial/security/first-steps/)
+- [ ] [Get Current User](https://fastapi.tiangolo.com/tutorial/security/get-current-user/)
+- [ ] [Simple OAuth2 with Password and Bearer](https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/)
+- [ ] [OAuth2 with Password (and hashing), Bearer with JWT tokens](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/)
 
 ### Middleware, CORS, and databases
 The cross-cutting stuff that matters most once an API is real — middleware, CORS policy, and wiring in a SQL database.
