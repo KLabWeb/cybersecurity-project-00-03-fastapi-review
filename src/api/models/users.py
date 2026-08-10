@@ -1,9 +1,10 @@
 from pydantic import BaseModel
 
 from models.user import User
+from security.auth import ADMIN, STAFF
 
 
-class PasswordVerificationUser(User):
+class PasswordVerificationUserRequest(User):
     password: str
 
     model_config = {
@@ -25,6 +26,11 @@ class LoginFormRequest(BaseModel):
     password: str
     model_config = {"extra": "forbid"}
 
+
+class UserRoleVerificationResponse(BaseModel):
+    user_id: int
+    is_staff: bool
+    is_admin: bool
 
 class LoginFormResponse(BaseModel):
     username: str

@@ -1,18 +1,30 @@
-from repository.user import get_user_by_id
-from security.hashing import DUMMY_HASH, verify_password
+from fastapi import Depends
 
+from repository.user import get_user_auth_by_id, get_user_roles_by_id, UserRole
+from security.hashing import DUMMY_HASH, verify_password
 
 # if no user verify pass against DUMMY_HASH
 # this ensures server has about same response time regardless of if user of no user
 # to prevent attacker timining probing for user vs no user on server
 def authenticate_user(user_id: int, password: str) -> bool:
-    user = get_user_by_id(user_id)
+    user_password = get_user_auth_by_id(user_id)
 
-    if not user:
+    if not user_password:
         verify_password(password, DUMMY_HASH)
         return False
 
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user_password):
         return False
 
     return True
+
+class UserRoleVerifier:
+    def __init__(self, allowed_roles: list[UserRole]):
+        self.allowed_roles = allowed_roles
+        
+    def __call__(self, user_role: UserRole = Depends(get_user_roles_by_id)) -> bool:
+        return user_role in self.allowed_roles
+
+# Role Config
+STAFF = UserRoleVerifier(allowed_roles=[UserRole.STAFF])
+ADMIN = UserRoleVerifier(allowed_roles=[UserRole.STAFF, UserRole.ADMIN])

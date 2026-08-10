@@ -1,19 +1,20 @@
 from typing import Annotated
 
-from fastapi import Form, HTTPException, Path, Request
+from fastapi import Depends, Form, HTTPException, Path, Request
 from fastapi.responses import PlainTextResponse
 
 from app import app
 from api.models.users import (
     LoginFormRequest,
     LoginFormResponse,
-    PasswordVerificationUser,
+    PasswordVerificationUserRequest,
+    UserRoleVerificationResponse,
 )
 from models.exception import DangerousUserIDException
 from models.item import UserID
 from models.user import User
 from repository.user import get_user_by_id, get_user_by_username, patch_updated_user
-from security.auth import authenticate_user
+from security.auth import authenticate_user, ADMIN, STAFF
 
 
 @app.get("/users/{user_id}")
@@ -26,26 +27,6 @@ async def get_user(user_id: Annotated[UserID, Path()]) -> User:
     return existing_item
 
 
-# Do not return a bool for auth like this but a Token, instead
-# Not up to auth section in docs yet, so this works as a placeholder to demonstrate model inheritance section of docs
-@app.post("/users/verify_auth")
-async def verify_user_password(user: PasswordVerificationUser) -> bool:
-    if not authenticate_user(user.id, user.password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    return True
-
-
-@app.patch("/users/{user_id}")
-async def update_user(user_id: int, user: User) -> User:
-    updated_user = patch_updated_user(user_id=user_id, user=user)
-
-    if updated_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    return updated_user
-    
-
 # Path which reads in a Form and stores in memory
 @app.post("/form_login")
 async def login_via_form(
@@ -57,6 +38,39 @@ async def login_via_form(
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     return LoginFormResponse(username=form_data.username)
+
+
+@app.patch("/users/{user_id}")
+async def update_user(user_id: int, user: User) -> User:
+    updated_user = patch_updated_user(user_id=user_id, user=user)
+
+    if updated_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return updated_user
+
+
+# Do not return a bool for auth like this but a Token, instead
+# Not up to auth section in docs yet, so this works as a placeholder to demonstrate model inheritance section of docs
+@app.post("/users/auth/verify")
+async def verify_user_password(user: PasswordVerificationUserRequest) -> bool:
+    if not authenticate_user(user.id, user.password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    return True
+
+
+# Endpoint which uses a class instance as a dependency
+@app.get("/users/roles/verify")
+async def verify_user_roles(
+    user_id: int,
+    is_staff: Annotated[bool, Depends(STAFF)],
+    is_admin: Annotated[bool, Depends(ADMIN)],
+) -> UserRoleVerificationResponse:
+
+    return UserRoleVerificationResponse(
+        user_id=user_id, is_staff=is_staff, is_admin=is_admin
+    )
 
 
 # Custom exception handler for when getting an item but item is too dangerous
