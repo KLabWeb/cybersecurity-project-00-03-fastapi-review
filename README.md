@@ -16,6 +16,7 @@ Concepts implemented in this API are built from what the official FastAPI docs t
 - `/security` - isolates password hashing and user auth from business logic
 - `/api/models` - request and response data transfer objects (HTTP layer models)
 - `/api/routes` - API client-facing endpoints and `@app.exception_handler` (HTTP layer interface)
+- `/security/` - API layer auth & role setting & verification
 - `main.py` - API entry point; imports all route modules to wire app together
 - `app.py` - creates app's FastAPI instance
 
@@ -79,7 +80,7 @@ Returning proper errors, configuring endpoints, encoding data, and doing partial
 ### Dependencies
 FastAPI's dependency injection — the thing auth and a lot of shared logic get built on top of. One of the sections I actually care about for AppSec.
 - [x] [Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/)
-- [ ] [Classes as Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/classes-as-dependencies/)
+- [x] [Classes as Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/classes-as-dependencies/)
 - [ ] [Sub-dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/sub-dependencies/)
 - [ ] [Dependencies in path operation decorators](https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-in-path-operation-decorators/)
 - [ ] [Global Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/global-dependencies/)
