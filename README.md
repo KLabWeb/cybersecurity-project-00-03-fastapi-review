@@ -27,7 +27,7 @@ The app is containerized with a modified config from my [Docker review project](
 I 
 ## Tutorial Progress
 
-Currently done through **section 28: Dependencies**. Checked = done. Sections completed = 30 / 52 = 57.7%
+Currently done through **section 29: Classes as Dependencies**. Checked = done. **Sections completed = 29 / 52 = 58%**
 
 ### Prereqs
 Basic python review for types and concurrency
