@@ -28,7 +28,7 @@ The app is containerized with a modified config from my [Docker review project](
 I 
 ## Tutorial Progress
 
-Currently done through **section 30: Sub-dependencies**. Checked = done. **Sections completed = 32 / 52 = 61.5%**
+Currently done through **section 30: Sub-dependencies**. Checked = done. **Sections completed = 34 / 52 = 67.3%**
 
 ### Prereqs
 Basic python review for types and concurrency
@@ -83,12 +83,12 @@ FastAPI's dependency injection — the thing auth and a lot of shared logic get 
 - [x] [Classes as Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/classes-as-dependencies/)
 - [x] [Sub-dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/sub-dependencies/)
 - [x] [Dependencies in path operation decorators](https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-in-path-operation-decorators/)
-- [ ] [Global Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/global-dependencies/)
-- [ ] [Dependencies with yield](https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-with-yield/)
+- [x] [Global Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/global-dependencies/)
+- [x] [Dependencies with yield](https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-with-yield/)
 
 ### Security
 Auth from the ground up, through OAuth2 with password hashing and JWT tokens. This is the big one for me, and the foundation for the JWT work later in the study plan.
-- [ ] [Security](https://fastapi.tiangolo.com/tutorial/security/)
+- [x] [Security](https://fastapi.tiangolo.com/tutorial/security/)
 - [ ] [Security - First Steps](https://fastapi.tiangolo.com/tutorial/security/first-steps/)
 - [ ] [Get Current User](https://fastapi.tiangolo.com/tutorial/security/get-current-user/)
 - [ ] [Simple OAuth2 with Password and Bearer](https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/)

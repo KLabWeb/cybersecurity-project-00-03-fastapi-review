@@ -1,7 +1,9 @@
 from fastapi import Depends
+from fastapi.security import OAuth2PasswordBearer
 
 from repository.user import get_user_auth_by_id, get_user_roles_by_id, UserRole
 from security.hashing import DUMMY_HASH, verify_password
+
 
 # if no user verify pass against DUMMY_HASH
 # this ensures server has about same response time regardless of if user of no user
@@ -23,10 +25,13 @@ def authenticate_user(user_id: int, password: str) -> bool:
 class UserRoleVerifier:
     def __init__(self, allowed_roles: list[UserRole]):
         self.allowed_roles = allowed_roles
-        
+
     def __call__(self, user_role: UserRole = Depends(get_user_roles_by_id)) -> bool:
         return user_role in self.allowed_roles
 
 # Role Config
 STAFF = UserRoleVerifier(allowed_roles=[UserRole.STAFF])
 ADMIN = UserRoleVerifier(allowed_roles=[UserRole.STAFF, UserRole.ADMIN])
+
+# OAuth 2 Password Auth flow
+OAUTH2_SCHEME = Depends(OAuth2PasswordBearer(tokenUrl="token"))

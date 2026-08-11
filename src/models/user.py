@@ -5,6 +5,7 @@ class User(BaseModel):
     id: int
     username: str
     image: HttpUrl | None = HttpUrl(url="http://mysite.com/my_image.jpg")
+    token: str | None = None
     
     model_config = {
         "json_schema_extra": {
