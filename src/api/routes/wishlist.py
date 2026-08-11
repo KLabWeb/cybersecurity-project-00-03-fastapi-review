@@ -23,7 +23,6 @@ async def get_wishlist(
     wishlist_id: int,
     db: DB,
     debugger: DEBUGGER,
-    token: Annotated[str, Depends(OAUTH2_SCHEME)],
     debug: bool = False,
 ) -> WishlistDebugReponse:
     existing_wishlist = db.get_wishlist_by_id(wishlist_id=wishlist_id)
