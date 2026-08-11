@@ -28,7 +28,7 @@ The app is containerized with a modified config from my [Docker review project](
 I 
 ## Tutorial Progress
 
-Currently done through **section 29: Classes as Dependencies**. Checked = done. **Sections completed = 29 / 52 = 58%**
+Currently done through **section 30: Sub-dependencies**. Checked = done. **Sections completed = 32 / 52 = 61.5%**
 
 ### Prereqs
 Basic python review for types and concurrency
@@ -81,8 +81,8 @@ Returning proper errors, configuring endpoints, encoding data, and doing partial
 FastAPI's dependency injection — the thing auth and a lot of shared logic get built on top of. One of the sections I actually care about for AppSec.
 - [x] [Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/)
 - [x] [Classes as Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/classes-as-dependencies/)
-- [ ] [Sub-dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/sub-dependencies/)
-- [ ] [Dependencies in path operation decorators](https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-in-path-operation-decorators/)
+- [x] [Sub-dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/sub-dependencies/)
+- [x] [Dependencies in path operation decorators](https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-in-path-operation-decorators/)
 - [ ] [Global Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/global-dependencies/)
 - [ ] [Dependencies with yield](https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-with-yield/)
 

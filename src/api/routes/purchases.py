@@ -22,6 +22,8 @@ async def get_purchases() -> list[Purchase]:
     return get_all_purchases()
 
 
+# Endpoint which raises custom headers and detail if exception hit
+# returns response object after building response from two repo queries
 @app.get("/purchases/{user_id}")
 async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
     purchases = get_purchases_by_user_id(user_id=user_id)

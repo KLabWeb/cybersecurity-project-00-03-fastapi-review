@@ -16,7 +16,7 @@ from models.user import User
 from repository.user import get_user_by_id, get_user_by_username, patch_updated_user
 from security.auth import authenticate_user, ADMIN, STAFF
 
-
+# First endpoint
 @app.get("/users/{user_id}")
 async def get_user(user_id: Annotated[UserID, Path()]) -> User:
     existing_item = get_user_by_id(user_id)
@@ -39,7 +39,7 @@ async def login_via_form(
 
     return LoginFormResponse(username=form_data.username)
 
-
+# Path which patches user via selective updating of model props
 @app.patch("/users/{user_id}")
 async def update_user(user_id: int, user: User) -> User:
     updated_user = patch_updated_user(user_id=user_id, user=user)

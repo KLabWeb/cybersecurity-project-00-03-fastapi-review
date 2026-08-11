@@ -18,6 +18,8 @@ def authenticate_user(user_id: int, password: str) -> bool:
 
     return True
 
+
+# Class, which is used as a depency itself also Depends on repo function to get roles
 class UserRoleVerifier:
     def __init__(self, allowed_roles: list[UserRole]):
         self.allowed_roles = allowed_roles
