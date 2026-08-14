@@ -1,6 +1,6 @@
 from app import app
 
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 
 from api.dependencies.debug import DEBUGGER
@@ -10,10 +10,6 @@ from api.dependencies.header import SECRET_HEADER
 from api.models.wishlist import WishlistDebugReponse
 
 from repository.wishlist import get_whishlist_by_user_id
-
-from security.auth import OAUTH2_SCHEME
-
-from typing import Annotated
 
 
 # Note the path operation decorator dependency here which returns nothing but still does something

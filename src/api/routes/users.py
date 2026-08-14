@@ -2,6 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends, Form, HTTPException, Path, Request
 from fastapi.responses import PlainTextResponse
+from fastapi.security import OAuth2PasswordRequestForm
 
 from app import app
 from api.models.users import (
@@ -12,14 +13,17 @@ from api.models.users import (
 )
 from models.exception import DangerousUserIDException
 from models.item import UserID
-from models.user import User
-from repository.user import get_user_by_id, get_user_by_username, patch_updated_user
-from security.auth import authenticate_user, ADMIN, STAFF
+from models.user import User, Token
+from repository.user import get_user_by_id as repo_get_user_by_id, get_user_by_username as repo_get_user_by_username, patch_updated_user
+from security.auth.verify import authenticate_user, ADMIN, STAFF
+from security.auth.legacy import AUTH_AND_GET_CURRENT_USER as LEGACY_AUTH
+from security.auth.jwt import AUTH_AND_GET_CURRENT_USER as JWT_AUTH
+from security.auth.jwt import create_access_token
 
 # First endpoint
 @app.get("/users/{user_id}")
-async def get_user(user_id: Annotated[UserID, Path()]) -> User:
-    existing_item = get_user_by_id(user_id)
+async def get_user_by_id(user_id: Annotated[UserID, Path()]) -> User:
+    existing_item = repo_get_user_by_id(user_id)
 
     if existing_item is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -27,17 +31,78 @@ async def get_user(user_id: Annotated[UserID, Path()]) -> User:
     return existing_item
 
 
+# Uses legacy auth flow AUTH_AND_GET_CURRENT_USER
+# Auth verifies token, then gets user
+@app.get("/users/username/{username}")
+async def get_user_by_username(
+    username: str, current_user: LEGACY_AUTH
+) -> User:
+    if current_user is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Could not validate user credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    existing_item = repo_get_user_by_username(username)
+
+    if existing_item is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return existing_item
+
+
+# Uses JWT auth flow AUTH_AND_GET_CURRENT_USER
+# Auth verifies token, then patches the user found by username
+@app.patch("/users/username/{username}")
+async def update_user_by_username(
+    username: str, user: User, current_user: JWT_AUTH
+) -> User:
+    if current_user is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Could not validate user credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    existing_user = repo_get_user_by_username(username)
+
+    if existing_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    updated_user = patch_updated_user(user_id=existing_user.id, user=user)
+
+    if updated_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return updated_user
+
+
+@app.post("/login")
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
+    user_record = repo_get_user_by_username(form_data.username)    
+    if user_record is None:
+        raise HTTPException(status_code=401, detail="Incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
+    
+    if not authenticate_user(user_record.username, form_data.password):
+        raise HTTPException(status_code=401, detail="Incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
+    
+    access_token = create_access_token(data={"sub": user_record.username})
+    return Token(access_token=access_token, token_type="bearer")
+    
+    
 # Path which reads in a Form and stores in memory
 @app.post("/form_login")
 async def login_via_form(
     form_data: Annotated[LoginFormRequest, Form()],
 ) -> LoginFormResponse:
-    user_record = get_user_by_username(form_data.username)
+    user_record = repo_get_user_by_username(form_data.username)
 
-    if user_record is None or not authenticate_user(user_record.id, form_data.password):
+    if user_record is None or not authenticate_user(user_record.username, form_data.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     return LoginFormResponse(username=form_data.username)
+
 
 # Path which patches user via selective updating of model props
 @app.patch("/users/{user_id}")
@@ -54,7 +119,7 @@ async def update_user(user_id: int, user: User) -> User:
 # Not up to auth section in docs yet, so this works as a placeholder to demonstrate model inheritance section of docs
 @app.post("/users/auth/verify")
 async def verify_user_password(user: PasswordVerificationUserRequest) -> bool:
-    if not authenticate_user(user.id, user.password):
+    if not authenticate_user(user.username, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     return True

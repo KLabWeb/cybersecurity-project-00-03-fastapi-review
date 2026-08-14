@@ -1,11 +1,9 @@
 from pydantic import BaseModel, HttpUrl
 
-
 class User(BaseModel):
     id: int
     username: str
     image: HttpUrl | None = HttpUrl(url="http://mysite.com/my_image.jpg")
-    token: str | None = None
     
     model_config = {
         "json_schema_extra": {
@@ -18,3 +16,8 @@ class User(BaseModel):
             ]
         }
     }
+    
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

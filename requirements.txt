@@ -2,4 +2,5 @@ fastapi[standard]==0.141.1
 uvicorn[standard]==0.52.1
 library-skills==0.0.19
 pwdlib[argon2]==0.3.0
+pyjwt==2.13.0
 python-multipart[0.0.32]

@@ -48,10 +48,15 @@ def get_user_record_by_id(user_id: int) -> UserRecord | None:
     for test_user in test_users:
         if test_user.id == user_id:
             return test_user
+        
+def get_user_record_by_username(username: str) -> UserRecord | None:
+    for test_user in test_users:
+        if test_user.username == username:
+            return test_user
 
 
-def get_user_auth_by_id(user_id: int) -> str | None:
-    test_user = get_user_record_by_id(user_id)
+def get_user_auth_by_username(username: str) -> str | None:
+    test_user = get_user_record_by_username(username)
 
     return test_user.hashed_password if test_user else None
 

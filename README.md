@@ -28,7 +28,7 @@ The app is containerized with a modified config from my [Docker review project](
 I 
 ## Tutorial Progress
 
-Currently done through **section 30: Sub-dependencies**. Checked = done. **Sections completed = 34 / 52 = 67.3%**
+Currently done through **section 30: Sub-dependencies**. Checked = done. **Sections completed = 38 / 52 = 73.1%**
 
 ### Prereqs
 Basic python review for types and concurrency
@@ -89,10 +89,10 @@ FastAPI's dependency injection — the thing auth and a lot of shared logic get 
 ### Security
 Auth from the ground up, through OAuth2 with password hashing and JWT tokens. This is the big one for me, and the foundation for the JWT work later in the study plan.
 - [x] [Security](https://fastapi.tiangolo.com/tutorial/security/)
-- [ ] [Security - First Steps](https://fastapi.tiangolo.com/tutorial/security/first-steps/)
-- [ ] [Get Current User](https://fastapi.tiangolo.com/tutorial/security/get-current-user/)
-- [ ] [Simple OAuth2 with Password and Bearer](https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/)
-- [ ] [OAuth2 with Password (and hashing), Bearer with JWT tokens](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/)
+- [x] [Security - First Steps](https://fastapi.tiangolo.com/tutorial/security/first-steps/)
+- [x] [Get Current User](https://fastapi.tiangolo.com/tutorial/security/get-current-user/)
+- [x] [Simple OAuth2 with Password and Bearer](https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/)
+- [x] [OAuth2 with Password (and hashing), Bearer with JWT tokens](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/)
 
 ### Middleware, CORS, and databases
 The cross-cutting stuff that matters most once an API is real — middleware, CORS policy, and wiring in a SQL database.
