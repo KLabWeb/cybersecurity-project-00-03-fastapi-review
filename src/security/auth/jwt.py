@@ -7,7 +7,7 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 
 from models.user import User
-from repository.user import get_user_by_username
+from repository.legacy.user import get_user_by_username
 
 # Module for creating JWT token
 

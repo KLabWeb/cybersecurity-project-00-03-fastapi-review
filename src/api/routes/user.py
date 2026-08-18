@@ -14,7 +14,7 @@ from api.models.users import (
 from models.exception import DangerousUserIDException
 from models.item import UserID
 from models.user import User, Token
-from repository.user import get_user_by_id as repo_get_user_by_id, get_user_by_username as repo_get_user_by_username, patch_updated_user
+from repository.legacy.user import get_user_by_id as repo_get_user_by_id, get_user_by_username as repo_get_user_by_username, patch_updated_user
 from security.auth.verify import authenticate_user, ADMIN, STAFF
 from security.auth.legacy import AUTH_AND_GET_CURRENT_USER as LEGACY_AUTH
 from security.auth.jwt import AUTH_AND_GET_CURRENT_USER as JWT_AUTH

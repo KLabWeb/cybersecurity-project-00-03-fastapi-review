@@ -18,7 +18,7 @@ from api.models.items import (
     ItemsJSONResponse,
 )
 from models.item import Color, Item, ItemID
-from repository.item import (
+from repository.legacy.item import (
     get_all_items,
     get_item_by_id,
     get_items_below_price,

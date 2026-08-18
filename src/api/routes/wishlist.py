@@ -4,12 +4,11 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 
 from api.dependencies.debug import DEBUGGER
-from api.dependencies.fake_db import DB
 from api.dependencies.header import SECRET_HEADER
 
 from api.models.wishlist import WishlistDebugReponse
 
-from repository.wishlist import get_whishlist_by_user_id
+from repository.legacy.wishlist import get_whishlist_by_id, get_whishlist_by_user_id
 
 
 # Note the path operation decorator dependency here which returns nothing but still does something
@@ -17,11 +16,10 @@ from repository.wishlist import get_whishlist_by_user_id
 @app.get("/wishlists/{wishlist_id}", dependencies=[SECRET_HEADER])
 async def get_wishlist(
     wishlist_id: int,
-    db: DB,
     debugger: DEBUGGER,
     debug: bool = False,
 ) -> WishlistDebugReponse:
-    existing_wishlist = db.get_wishlist_by_id(wishlist_id=wishlist_id)
+    existing_wishlist = get_whishlist_by_id(wishlist_id=wishlist_id)
 
     if existing_wishlist is None:
         raise HTTPException(status_code=404, detail="Wishlist not found")

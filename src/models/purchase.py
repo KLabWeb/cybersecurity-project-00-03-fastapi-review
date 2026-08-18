@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class Purchase(BaseModel):
-    id: int
+    id: int | None = None
     user_id: int
     item_id: int
     manager_discount: bool | None = False

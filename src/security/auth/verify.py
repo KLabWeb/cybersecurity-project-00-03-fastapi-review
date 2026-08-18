@@ -1,6 +1,6 @@
 from fastapi import Depends
 
-from repository.user import get_user_auth_by_username, get_user_roles_by_id, UserRole
+from repository.legacy.user import get_user_auth_by_username, get_user_roles_by_id, UserRole
 from security.hashing import DUMMY_HASH, verify_password
 
 # Module for verifying user authentication details
