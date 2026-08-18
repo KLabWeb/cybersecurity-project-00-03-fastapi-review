@@ -28,7 +28,7 @@ The app is containerized with a modified config from my [Docker review project](
 
 ## Tutorial Progress
 
-Currently done through **section 38: OAuth2 with Password (and hashing), Bearer with JWT tokens**. Checked = done. **Sections completed = 40 / 53 = 75.5%**
+Currently done through **section 39: Middleware**. Checked = done. **Sections completed = 41 / 53 = 77.3%**
 
 ### Prereqs
 Basic python review for types and concurrency
@@ -96,7 +96,7 @@ Auth from the ground up, through OAuth2 with password hashing and JWT tokens. Th
 
 ### Middleware, CORS, and databases
 The cross-cutting stuff that matters most once an API is real — middleware, CORS policy, and wiring in a SQL database.
-- [ ] [Middleware](https://fastapi.tiangolo.com/tutorial/middleware/)
+- [x] [Middleware](https://fastapi.tiangolo.com/tutorial/middleware/)
 - [ ] [CORS (Cross-Origin Resource Sharing)](https://fastapi.tiangolo.com/tutorial/cors/)
 - [ ] [SQL (Relational) Databases](https://fastapi.tiangolo.com/tutorial/sql-databases/)
 
