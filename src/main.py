@@ -1,5 +1,7 @@
 from app import app
 
+import middleware.performance
+
 import api.routes.items
 import api.routes.files
 import api.routes.purchases
