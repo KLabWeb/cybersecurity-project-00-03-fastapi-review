@@ -28,9 +28,7 @@ The app is containerized with a modified config from my [Docker review project](
 
 ## Tutorial Progress
 
-Currently done through **section 38: OAuth2 with Password (and hashing), Bearer with JWT tokens**. Checked = done. **Sections completed = 38 / 52 = 73.1%**
-
-Lines with strike-throughs are skipped sections, due to being out of scope of routine FastAPI use.
+Currently done through **section 38: OAuth2 with Password (and hashing), Bearer with JWT tokens**. Checked = done. **Sections completed = 40 / 53 = 75.5%**
 
 ### Prereqs
 Basic python review for types and concurrency
@@ -105,49 +103,19 @@ The cross-cutting stuff that matters most once an API is real — middleware, CO
 ### Bigger apps and the rest
 Splitting into multiple files, streaming, background tasks, docs metadata, static files, testing, and debugging.
 - [ ] [Bigger Applications - Multiple Files](https://fastapi.tiangolo.com/tutorial/bigger-applications/)
-- ~~[ ] [Stream JSON Lines](https://fastapi.tiangolo.com/tutorial/stream-json-lines/)~~
-- ~~[ ] [Server-Sent Events (SSE)](https://fastapi.tiangolo.com/tutorial/server-sent-events/)~~
-- ~~[ ] [Background Tasks](https://fastapi.tiangolo.com/tutorial/background-tasks/)~~
-- ~~[ ] [Metadata and Docs URLs](https://fastapi.tiangolo.com/tutorial/metadata/)~~
-- ~~[ ] [Frontend](https://fastapi.tiangolo.com/tutorial/frontend/)~~
-- ~~[ ] [Static Files](https://fastapi.tiangolo.com/tutorial/static-files/)~~
 - [ ] [Testing](https://fastapi.tiangolo.com/tutorial/testing/)
 - [ ] [Debugging](https://fastapi.tiangolo.com/tutorial/debugging/)
 
 ### Advanced User Guide
 The docs' separate Advanced guide (the docs themselves note these are "not necessarily advanced").
-- ~~[ ] [Stream Data](https://fastapi.tiangolo.com/advanced/stream-data/)~~
-- ~~[ ] [Path Operation Advanced Configuration](https://fastapi.tiangolo.com/advanced/path-operation-advanced-configuration/)~~
-- ~~[ ] [Additional Status Codes](https://fastapi.tiangolo.com/advanced/additional-status-codes/)~~
-- ~~[ ] [Return a Response Directly](https://fastapi.tiangolo.com/advanced/response-directly/)~~
-- ~~[ ] [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)~~
-- ~~[ ] [Additional Responses in OpenAPI](https://fastapi.tiangolo.com/advanced/additional-responses/)~~
 - [ ] [Response Cookies](https://fastapi.tiangolo.com/advanced/response-cookies/)
 - [ ] [Response Headers](https://fastapi.tiangolo.com/advanced/response-headers/)
-- ~~[ ] [Response - Change Status Code](https://fastapi.tiangolo.com/advanced/response-change-status-code/)~~
 - [ ] [Advanced Dependencies](https://fastapi.tiangolo.com/advanced/advanced-dependencies/)
 - [ ] [Advanced Security](https://fastapi.tiangolo.com/advanced/security/)
-  - [ ] [OAuth2 scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/)
-  - ~~[ ] [HTTP Basic Auth](https://fastapi.tiangolo.com/advanced/security/http-basic-auth/)~~
-- ~~[ ] [Using the Request Directly](https://fastapi.tiangolo.com/advanced/using-request-directly/)~~
-- ~~[ ] [Using Dataclasses](https://fastapi.tiangolo.com/advanced/dataclasses/)~~
-- ~~[ ] [Advanced Middleware](https://fastapi.tiangolo.com/advanced/middleware/)~~
-- ~~[ ] [Sub Applications - Mounts](https://fastapi.tiangolo.com/advanced/sub-applications/)~~
+- [ ] [OAuth2 scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/)
 - [ ] [Behind a Proxy](https://fastapi.tiangolo.com/advanced/behind-a-proxy/)
-- ~~[ ] [Templates](https://fastapi.tiangolo.com/advanced/templates/)~~
-- ~~[ ] [WebSockets](https://fastapi.tiangolo.com/advanced/websockets/)~~
-- ~~[ ] [Lifespan Events](https://fastapi.tiangolo.com/advanced/events/)~~
-- ~~[ ] [Testing WebSockets](https://fastapi.tiangolo.com/advanced/testing-websockets/)~~
-- ~~[ ] [Testing Events: lifespan and startup - shutdown](https://fastapi.tiangolo.com/advanced/testing-events/)~~
 - [ ] [Testing Dependencies with Overrides](https://fastapi.tiangolo.com/advanced/testing-dependencies/)
-- ~~[ ] [Async Tests](https://fastapi.tiangolo.com/advanced/async-tests/)~~
 - [ ] [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)
-- ~~[ ] [OpenAPI Callbacks](https://fastapi.tiangolo.com/advanced/openapi-callbacks/)~~
-- ~~[ ] [OpenAPI Webhooks](https://fastapi.tiangolo.com/advanced/openapi-webhooks/)~~
-- ~~[ ] [Including WSGI - Flask, Django, others](https://fastapi.tiangolo.com/advanced/wsgi/)~~
-- ~~[ ] [Generating SDKs](https://fastapi.tiangolo.com/advanced/generate-clients/)~~
-- ~~[ ] [Advanced Python Types](https://fastapi.tiangolo.com/advanced/advanced-python-types/)~~
-- ~~[ ] [JSON with Bytes as Base64](https://fastapi.tiangolo.com/advanced/json-base64-bytes/)~~
 - [ ] [Strict Content-Type Checking](https://fastapi.tiangolo.com/advanced/strict-content-type/)
 
 ## Related
