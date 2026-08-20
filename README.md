@@ -101,7 +101,7 @@ The cross-cutting stuff that matters most once an API is real — middleware, CO
 - [ ] [SQL (Relational) Databases](https://fastapi.tiangolo.com/tutorial/sql-databases/)
 
 ### Bigger apps and the rest
-Splitting into multiple files, streaming, background tasks, docs metadata, static files, testing, and debugging.
+Splitting into multiple files, testing, and debugging.
 - [ ] [Bigger Applications - Multiple Files](https://fastapi.tiangolo.com/tutorial/bigger-applications/)
 - [ ] [Testing](https://fastapi.tiangolo.com/tutorial/testing/)
 - [ ] [Debugging](https://fastapi.tiangolo.com/tutorial/debugging/)

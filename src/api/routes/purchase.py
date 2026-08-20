@@ -1,6 +1,6 @@
 from typing import Annotated, Any
 
-from fastapi import Body, HTTPException
+from fastapi import Body, HTTPException, Query
 
 from app import app
 from api.models.purchases import GetPurchasesResponse
@@ -12,18 +12,23 @@ from repository.legacy.item import get_item_by_id
 from repository.legacy.purchase import (
     get_purchases as get_all_purchases,
     get_purchases_by_user_id,
-    put_purchase_from_item_and_user,
 )
 from repository.legacy.user import get_user_by_id
 
 from repository.sql.db.sqlite import SQL_SESSION
-from repository.sql.models.purchase import Purchase as SqlPurchase, create_purchase
+from repository.sql.models.purchase import Purchase as SqlPurchase, create_purchase, get_purchases as get_sql_purchase
 
 
 # Path which returns all purchases
+# Uses limit and offset to paginate results
 @app.get("/purchases")
-async def get_purchases() -> list[Purchase]:
-    return get_all_purchases()
+async def get_purchases(
+    sql_session: SQL_SESSION,
+    offset: int = 0,
+    limit: Annotated[int, Query(le=100)] = 100
+) -> list[Purchase]:
+    
+    return await get_sql_purchase(sql_session=sql_session, offset=offset, limit=limit)
 
 
 # Endpoint which raises custom headers and detail if exception hit
@@ -76,4 +81,4 @@ async def create_purchase_from_item_and_user(
         manager_discount=manager_discount,
     )
 
-    return await create_purchase(purchase=purchase, sql_session=sql_session)
+    return await create_purchase(sql_session=sql_session, purchase=purchase)
