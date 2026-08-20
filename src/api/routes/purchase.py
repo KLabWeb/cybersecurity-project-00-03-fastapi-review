@@ -4,6 +4,7 @@ from fastapi import Body, HTTPException, Query
 
 from app import app
 from api.models.purchases import GetPurchasesResponse
+from models.exception import PurchaseNotFoundException
 from models.item import Item
 from models.purchase import Purchase
 from models.user import User
@@ -13,7 +14,7 @@ from repository.legacy.purchase import get_purchases_by_user_id
 from repository.legacy.user import get_user_by_id
 
 from repository.sql.db.sqlite import SQL_SESSION
-from repository.sql.models.purchase import Purchase as SqlPurchase, create_purchase, get_purchase as get_sql_purchase, get_purchases as get_sql_purchases
+from repository.sql.models.purchase import Purchase as SqlPurchase, create_purchase, delete_purchase as delete_sql_purchase, get_purchase as get_sql_purchase, get_purchases as get_sql_purchases
 
 
 # Path which returns all purchases
@@ -88,3 +89,12 @@ async def create_purchase_from_item_and_user(
     )
 
     return await create_purchase(purchase=purchase, sql_session=sql_session)
+
+@app.delete("/purchases")
+async def delete_purchase(purchase_id: int, sql_session: SQL_SESSION) -> Purchase:
+    try:
+        purchase = await delete_sql_purchase(purchase_id=purchase_id, sql_session=sql_session)
+    except PurchaseNotFoundException:
+        raise HTTPException(status_code=404, detail="Purchase not found")
+    
+    return purchase

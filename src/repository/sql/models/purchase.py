@@ -1,6 +1,7 @@
 from sqlmodel import Field, select, SQLModel
 from typing import Annotated, Sequence
 
+from models.exception import PurchaseNotFoundException
 from models.purchase import Purchase as DomainPurchase
 from repository.sql.db.sqlite import SQL_SESSION
 
@@ -52,3 +53,16 @@ async def get_purchases(
     result = sql_session.exec(statement)  # excecute sql statement
 
     return translate_purchases_to_domain(result.all())  # return all rows
+
+async def delete_purchase(purchase_id: int, sql_session: SQL_SESSION):
+    purchase = sql_session.get(Purchase, purchase_id)
+    
+    if not purchase:
+        raise PurchaseNotFoundException(purchase_id=purchase_id)
+    
+    domain_purchase = translate_purchase_to_domain(purchase)
+    
+    sql_session.delete(purchase)
+    sql_session.commit()
+    
+    return domain_purchase

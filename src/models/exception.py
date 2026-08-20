@@ -8,3 +8,7 @@ class DangerousUserIDException(RequestValidationError):
             [{"loc": ("path," "user_id"), 
               "msg": f"User id of '{user_id}' for requested user is a dangerous id. Sorry, but we can't get this user."}]
         )
+        
+class PurchaseNotFoundException(Exception):
+    def __init__(self, purchase_id: int):
+        self.purchase_id = purchase_id
