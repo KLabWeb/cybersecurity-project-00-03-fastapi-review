@@ -1,8 +1,7 @@
 from enum import Enum
 from random import randint
 
-from pydantic import HttpUrl
-
+from data.legacy.user import raw_users
 from models.exception import DangerousUserIDException
 from models.user import User
 from security.hashing import get_password_hash
@@ -18,29 +17,9 @@ class UserRecord(User):
     hashed_password: str
 
 
-# Obviously never store plaintext passwords like this in a real application
 test_users: list[UserRecord] = [
-    UserRecord(
-        id=0,
-        username="sleepycat24",
-        hashed_password=get_password_hash("8&19djd81d8a219@"),
-        role=UserRole.ADMIN,
-        image=None,
-    ),
-    UserRecord(
-        id=1,
-        username="grimANDfrostbitten",
-        hashed_password=get_password_hash("thepassword1827$7G!"),
-        role=UserRole.STAFF,
-        image=None,
-    ),
-    UserRecord(
-        id=2,
-        username="test-user",
-        hashed_password=get_password_hash("passphrasewalrusleaflitterbirds"),
-        role=UserRole.STAFF,
-        image=HttpUrl("http://www.google.com"),
-    ),
+    UserRecord(**raw_user, hashed_password=get_password_hash(raw_user["password"]))
+    for raw_user in raw_users
 ]
 
 

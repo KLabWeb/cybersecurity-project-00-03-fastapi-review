@@ -80,6 +80,21 @@ async def compare_item_prices(
     )
 
 
+# Uses FastAPI's jsonable_ecoder to get a json compatible obj (dict) from list[Item]
+# Then converts dict of Items and converts it into json formatted string
+@app.get("/items/json")
+async def get_items_as_json() -> ItemsJSONResponse:
+    items_list: list[Item] = get_all_items()
+
+    if not items_list:
+        raise HTTPException(status_code=404, detail="No items found")
+
+    items_dict: dict = jsonable_encoder(items_list)
+    items_str: str = json.dumps(items_dict)
+
+    return ItemsJSONResponse(items=items_str)
+
+
 # Path takes path parameter to ID resource and get specific item
 # ItemID carries the bounds validation via Path validation
 # Regex Query validator checks if query has a least one letter
@@ -170,17 +185,3 @@ async def set_offer_if_item_expensive(
         raise HTTPException(status_code=404, detail="Item not found")
 
     return updated_item
-
-# Uses FastAPI's jsonable_ecoder to get a json compatible obj (dict) from list[Item]
-# Then converts dict of Items and converts it into json formatted string
-@app.get("/items")
-async def get_items_as_json() -> ItemsJSONResponse:
-    items_list: list[Item] = get_all_items()
-    
-    if not items_list:
-        raise HTTPException(status_code=404, detail="No items found")
-    
-    items_dict: dict = jsonable_encoder(items_list)
-    items_str: str = json.dumps(items_dict)
-    
-    return ItemsJSONResponse(items=items_str)

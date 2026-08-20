@@ -31,6 +31,17 @@ async def create_purchase(
     return translate_purchase_to_domain(purchase)
 
 
+async def get_purchase(
+    sql_session: SQL_SESSION, purchase_id: int
+) -> DomainPurchase | None:
+    purchase = sql_session.get(Purchase, purchase_id)
+    
+    if purchase:
+        return translate_purchase_to_domain(purchase)
+
+    return None
+
+
 async def get_purchases(
     sql_session: SQL_SESSION, offset: int, limit: int
 ) -> list[DomainPurchase]:

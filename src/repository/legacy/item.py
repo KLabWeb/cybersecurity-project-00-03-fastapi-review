@@ -1,49 +1,8 @@
-from datetime import date
-
+from data.legacy.item import raw_items
 from models.item import Color, Item
 
-test_items: list[Item] = [
-    Item(
-        id=0,
-        name="Apple",
-        price=0.41,
-        is_offer=True,
-        created_on=date(2026, 3, 1),
-        updated_on=date(2026, 4, 15),
-    ),
-    Item(
-        id=1,
-        name="Pear",
-        price=0.49,
-        is_offer=False,
-        created_on=date(2026, 4, 12),
-        updated_on=date(2026, 5, 25),
-    ),
-    Item(
-        id=2,
-        name="Pineapple",
-        price=2.49,
-        is_offer=False,
-        created_on=date(2026, 1, 27),
-        updated_on=date(2026, 3, 19),
-    ),
-    Item(
-        id=3,
-        name="Peach",
-        price=0.57,
-        is_offer=False,
-        created_on=date(2026, 2, 18),
-        updated_on=date(2026, 6, 29),
-    ),
-    Item(
-        id=4,
-        name="Plum",
-        price=0.49,
-        is_offer=False,
-        created_on=date(2026, 1, 17),
-        updated_on=date(2026, 5, 22),
-    ),
-]
+test_items: list[Item] = [Item(**raw_item) for raw_item in raw_items]
+
 
 def get_all_items() -> list[Item]:
     return test_items

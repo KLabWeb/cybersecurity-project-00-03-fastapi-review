@@ -9,14 +9,11 @@ from models.purchase import Purchase
 from models.user import User
 
 from repository.legacy.item import get_item_by_id
-from repository.legacy.purchase import (
-    get_purchases as get_all_purchases,
-    get_purchases_by_user_id,
-)
+from repository.legacy.purchase import get_purchases_by_user_id
 from repository.legacy.user import get_user_by_id
 
 from repository.sql.db.sqlite import SQL_SESSION
-from repository.sql.models.purchase import Purchase as SqlPurchase, create_purchase, get_purchases as get_sql_purchase
+from repository.sql.models.purchase import Purchase as SqlPurchase, create_purchase, get_purchase as get_sql_purchase, get_purchases as get_sql_purchases
 
 
 # Path which returns all purchases
@@ -28,12 +25,21 @@ async def get_purchases(
     limit: Annotated[int, Query(le=100)] = 100
 ) -> list[Purchase]:
     
-    return await get_sql_purchase(sql_session=sql_session, offset=offset, limit=limit)
+    return await get_sql_purchases(offset=offset, limit=limit, sql_session=sql_session)
 
+
+@app.get("/users/purchases/{purchase_id}")
+async def get_purchase(purchase_id: int, sql_session: SQL_SESSION) -> Purchase:
+    purchase = await get_sql_purchase(purchase_id=purchase_id, sql_session=sql_session)
+
+    if not purchase: 
+        raise HTTPException(status_code=404, detail="Purchase not found")
+    
+    return purchase
 
 # Endpoint which raises custom headers and detail if exception hit
 # returns response object after building response from two repo queries
-@app.get("/purchases/{user_id}")
+@app.get("/purchases/user/{user_id}")
 async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
     purchases = get_purchases_by_user_id(user_id=user_id)
 
@@ -81,4 +87,4 @@ async def create_purchase_from_item_and_user(
         manager_discount=manager_discount,
     )
 
-    return await create_purchase(sql_session=sql_session, purchase=purchase)
+    return await create_purchase(purchase=purchase, sql_session=sql_session)

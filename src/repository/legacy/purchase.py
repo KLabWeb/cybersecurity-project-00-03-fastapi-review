@@ -1,15 +1,10 @@
+from data.legacy.purchase import raw_purchases
 from models.item import Item
 from models.purchase import Purchase
 from models.user import User
 
 test_purchases: list[Purchase] = [
-    Purchase(id=0, user_id=0, item_id=0),
-    Purchase(id=1, user_id=1, item_id=0),
-    Purchase(id=2, user_id=0, item_id=1),
-    Purchase(id=3, user_id=3, item_id=3),
-    Purchase(id=4, user_id=1, item_id=2),
-    Purchase(id=5, user_id=0, item_id=1),
-    Purchase(id=6, user_id=0, item_id=0),
+    Purchase(**raw_purchase) for raw_purchase in raw_purchases
 ]
 
 
