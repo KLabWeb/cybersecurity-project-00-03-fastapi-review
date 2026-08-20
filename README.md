@@ -28,8 +28,7 @@ The app is containerized with a modified config from my [Docker review project](
 
 ## Tutorial Progress
 
-Currently done through **section 42: CORS**. Checked = done. **Sections completed = 42 / 53 = 79.2%**
-
+Currently done through **section 42: CORS**. Checked = done. **Sections completed = 42 / 55 = 76.7%
 ### Prereqs
 Basic python review for types and concurrency
 - [x] [Python Types](https://fastapi.tiangolo.com/python-types/)
