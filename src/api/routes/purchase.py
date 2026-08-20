@@ -14,7 +14,7 @@ from repository.legacy.purchase import get_purchases_by_user_id
 from repository.legacy.user import get_user_by_id
 
 from repository.sql.db.sqlite import SQL_SESSION
-from repository.sql.models.purchase import Purchase as SqlPurchase, create_purchase, delete_purchase as delete_sql_purchase, get_purchase as get_sql_purchase, get_purchases as get_sql_purchases
+from repository.sql.models.purchase import create_purchase, PurchaseCreate, delete_purchase as delete_sql_purchase, get_purchase as get_sql_purchase, get_purchases as get_sql_purchases
 
 
 # Path which returns all purchases
@@ -71,8 +71,9 @@ async def create_purchase_from_item_and_user(
     user: User,
     item: Item,
     manager_discount: Annotated[bool, Body()],
+    secret_tracking_id: str,
     sql_session: SQL_SESSION,
-) -> Any:
+) -> Purchase:
     user_record = get_user_by_id(user_id=user.id)
     if user_record is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -81,11 +82,11 @@ async def create_purchase_from_item_and_user(
     if item_record is None:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    purchase = SqlPurchase(
-        id=None,
+    purchase = PurchaseCreate(
         user_id=user_record.id,
         item_id=item_record.id,
         manager_discount=manager_discount,
+        secret_tracking_id=secret_tracking_id,
     )
 
     return await create_purchase(purchase=purchase, sql_session=sql_session)
