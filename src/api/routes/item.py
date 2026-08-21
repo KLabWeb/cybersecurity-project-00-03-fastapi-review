@@ -2,10 +2,11 @@ from datetime import datetime
 from typing import Annotated
 import json
 
-from fastapi import Body, Cookie, Header, HTTPException, Path, Query, status
+from fastapi import APIRouter, Body, Cookie, Header, HTTPException, Path, Query, status
 from fastapi.encoders import jsonable_encoder
 
-from app import app
+from api.dependencies.header import SECRET_HEADER
+
 from api.models.items import (
     CompareItemPricesResponse,
     CompareItemsPricesQueryFilter,
@@ -30,9 +31,17 @@ from repository.legacy.item import (
 )
 
 
+router = APIRouter(
+    prefix="/items",
+    tags=["items", "FastAPI_tutorial"],
+    dependencies=[SECRET_HEADER],
+    responses={404: {"description": "Not found"}},
+)
+
+
 # Path which returns all items
 # Slices return based on offest and limit from Query request filter
-@app.get("/items")
+@router.get("/")
 async def get_items(
     filter_query: Annotated[GetItemsQueryFilter, Query()],
 ) -> list[Item]:
@@ -43,7 +52,7 @@ async def get_items(
 
 # Path which gets two items using query param of list type via Query validation
 # Obvisouly never define an endpoint like this (to just get two items) in a real system
-@app.get("/items/price-comparison")
+@router.get("/price-comparison")
 async def compare_item_prices(
     id: Annotated[CompareItemsPricesQueryFilter, Query()],
 ) -> CompareItemPricesResponse:
@@ -82,7 +91,7 @@ async def compare_item_prices(
 
 # Uses FastAPI's jsonable_ecoder to get a json compatible obj (dict) from list[Item]
 # Then converts dict of Items and converts it into json formatted string
-@app.get("/items/json")
+@router.get("/json")
 async def get_items_as_json() -> ItemsJSONResponse:
     items_list: list[Item] = get_all_items()
 
@@ -99,7 +108,7 @@ async def get_items_as_json() -> ItemsJSONResponse:
 # ItemID carries the bounds validation via Path validation
 # Regex Query validator checks if query has a least one letter
 # Note how this endpoint also looks for a Cookie and Header being passed in w/ request
-@app.get("/items/{item_id}")
+@router.get("/{item_id}")
 async def get_item(
     item_id: Annotated[ItemID, Path()],
     q: Annotated[GetItemQueryFilter, Query()],
@@ -123,7 +132,7 @@ async def get_item(
 
 # Path which creates item via request body details
 # Uses status to help fine proper status code to return
-@app.post("/items", status_code=status.HTTP_201_CREATED, tags=[ItemActionTags.CREATE])
+@router.post("/", status_code=status.HTTP_201_CREATED, tags=[ItemActionTags.CREATE])
 async def create_item(item: Item) -> Item:
     """
     Create an item with all the information:
@@ -139,7 +148,7 @@ async def create_item(item: Item) -> Item:
 
 # Path which updates whole Item via request body details
 # Also sets int to be embeded object inside request body
-@app.put("/items/{item_id}")
+@router.put("/{item_id}")
 async def update_item(
     item_id: int, item: Annotated[Item, Body(embed=True)]
 ) -> UpdateItemResponse:
@@ -156,7 +165,7 @@ async def update_item(
 
 
 # Path which only allows setting specific color names for updating color only
-@app.patch("/items/{item_id}/color")
+@router.patch("/{item_id}/color")
 async def update_item_color(item_id: int, color: Color) -> Item:
     updated_item = repo_update_item_color(item_id=item_id, color=color)
 
@@ -167,7 +176,7 @@ async def update_item_color(item_id: int, color: Color) -> Item:
 
 
 # Path which uses a query param to filter items chepaer than max_price
-@app.get("/items/")
+@router.get("/")
 async def get_cheap_items(max_price: float) -> list[Item]:
     return get_items_below_price(max_price=max_price)
 
@@ -175,11 +184,13 @@ async def get_cheap_items(max_price: float) -> list[Item]:
 # Path which uses path param, query param, and request body
 # Path param gets item, query param filters item, request body gives update data
 # Really don't need to pass in whole item here, but works for tutorial purposes
-@app.patch("/items/{item_id}")
+@router.patch("/{item_id}")
 async def set_offer_if_item_expensive(
     item_id: int, item: Item, expensive_price: float, deprecated=True
 ) -> Item:
-    updated_item = set_offer_if_expensive(item_id=item_id, item=item, expensive_price=expensive_price)
+    updated_item = set_offer_if_expensive(
+        item_id=item_id, item=item, expensive_price=expensive_price
+    )
 
     if updated_item is None:
         raise HTTPException(status_code=404, detail="Item not found")

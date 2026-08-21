@@ -11,16 +11,37 @@ See the notes I am taking while completing the official docs [here](https://gith
 ## Design for this Project
 Concepts implemented in this API are built from what the official FastAPI docs tutorial teaches. Unlike the official docs, though, I designed this API using strict Domain-Driven Design principles and layers.
 
-- `/models` - defines domain objects (Item, User, etc.)
-- `/repository` - owns all data and all interactions with data
-- `/security` - isolates password hashing and user auth from business logic
-- `/api/models` - request and response data transfer objects (HTTP layer models)
-- `/api/routes` - API client-facing endpoints and `@app.exception_handler` (HTTP layer interface)
-- `/security/` - API layer auth & role setting & verification
-- `main.py` - API entry point; imports all route modules to wire app together
-- `app.py` - creates app's FastAPI instance
+```
+.
+├── data                          the data stores themselves, not commited
+│   ├── legacy                      raw in-memory data (item, purchase, user, wishlist)
+│   └── sqlite                      database.db, supplied at runtime by the compose volume
+│
+└── src
+    ├── app.py                    creates the app's FastAPI instance
+    ├── main.py                   entry point; wires the app via include_router and route imports
+    ├── models                    domain objects (Item, User, Purchase, ...), and their exceptions
+    │
+    ├── api                       the HTTP layer
+    │   ├── models                  request and response Data Transfer Objects
+    │   ├── routes                  client-facing endpoints and `@app.exception_handler`
+    │   └── dependencies            reusable `Depends` shared across routes (headers, debug)
+    │
+    ├── repository                owns all access to data; no other layer touches a store
+    │   ├── __init__.py             init_storage(), the single entry point for storage setup
+    │   ├── legacy                  CRUD access methods for legacy store w/ translations to domain
+    │   └── sql                     CRUD access methods for SQLite store via SQLModel w/ translations to domain
+    │       ├── db                    engine, session factory, and the SQL_SESSION dependency
+    │       └── models                table models, translation layer, and the CRUD functions
+    │
+    ├── security
+    │   ├── hashing.py              password hashing (isolated from business logic)
+    │   └── auth                    auth, token schemes (jwt, legacy), and role verification
+    │
+    └── middleware                cross-cutting request/response work (process time, CORS)
+```
 
-Each layer owns its own models, data manipulation, data interpretation, and interface. Each layer is a black box internally. The business objects define the API.
+Each layer owns its own models, data access and manipulation, data interpretation, and interface. Each layer aims to be a black box internally, and business objects define the API.
 
 ## Running the API Locally
 
@@ -28,7 +49,7 @@ The app is containerized with a modified config from my [Docker review project](
 
 ## Tutorial Progress
 
-Currently done through **section 42: CORS**. Checked = done. **Sections completed = 42 / 55 = 76.7%
+Currently done through **section 44: Bigger Applications - Multiple Files**. Checked = done. **Sections completed = 44 / 55 = 80.0%**
 ### Prereqs
 Basic python review for types and concurrency
 - [x] [Python Types](https://fastapi.tiangolo.com/python-types/)
@@ -97,11 +118,11 @@ Auth from the ground up, through OAuth2 with password hashing and JWT tokens. Th
 The cross-cutting stuff that matters most once an API is real — middleware, CORS policy, and wiring in a SQL database.
 - [x] [Middleware](https://fastapi.tiangolo.com/tutorial/middleware/)
 - [x] [CORS (Cross-Origin Resource Sharing)](https://fastapi.tiangolo.com/tutorial/cors/)
-- [ ] [SQL (Relational) Databases](https://fastapi.tiangolo.com/tutorial/sql-databases/)
+- [x] [SQL (Relational) Databases](https://fastapi.tiangolo.com/tutorial/sql-databases/)
 
 ### Bigger apps and the rest
 Splitting into multiple files, testing, and debugging.
-- [ ] [Bigger Applications - Multiple Files](https://fastapi.tiangolo.com/tutorial/bigger-applications/)
+- [x] [Bigger Applications - Multiple Files](https://fastapi.tiangolo.com/tutorial/bigger-applications/)
 - [ ] [Testing](https://fastapi.tiangolo.com/tutorial/testing/)
 - [ ] [Debugging](https://fastapi.tiangolo.com/tutorial/debugging/)
 

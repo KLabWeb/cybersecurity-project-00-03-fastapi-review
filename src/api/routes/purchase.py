@@ -50,7 +50,9 @@ async def get_purchase(purchase_id: int, sql_session: SQL_SESSION) -> Purchase:
 # Endpoint which raises custom headers and detail if exception hit
 # returns response object after building response from two repo queries
 @app.get("/purchases/user/{user_id}")
-async def get_purchases_by_user(user_id: int, sql_session: SQL_SESSION) -> GetPurchasesResponse:
+async def get_purchases_by_user(
+    user_id: int, sql_session: SQL_SESSION
+) -> GetPurchasesResponse:
     purchases = await get_purchases_by_user_id(user_id=user_id, sql_session=sql_session)
 
     user = get_user_by_id(user_id=user_id)
