@@ -14,7 +14,15 @@ from repository.legacy.purchase import get_purchases_by_user_id
 from repository.legacy.user import get_user_by_id
 
 from repository.sql.db.sqlite import SQL_SESSION
-from repository.sql.models.purchase import create_purchase, PurchaseCreate, delete_purchase as delete_sql_purchase, get_purchase as get_sql_purchase, get_purchases as get_sql_purchases
+from repository.sql.models.purchase import (
+    create_purchase,
+    PurchaseCreate,
+    delete_purchase as delete_sql_purchase,
+    get_purchase as get_sql_purchase,
+    get_purchases as get_sql_purchases,
+    update_purchase,
+    PurchaseUpdate,
+)
 
 
 # Path which returns all purchases
@@ -23,9 +31,9 @@ from repository.sql.models.purchase import create_purchase, PurchaseCreate, dele
 async def get_purchases(
     sql_session: SQL_SESSION,
     offset: int = 0,
-    limit: Annotated[int, Query(le=100)] = 100
+    limit: Annotated[int, Query(le=100)] = 100,
 ) -> list[Purchase]:
-    
+
     return await get_sql_purchases(offset=offset, limit=limit, sql_session=sql_session)
 
 
@@ -33,10 +41,11 @@ async def get_purchases(
 async def get_purchase(purchase_id: int, sql_session: SQL_SESSION) -> Purchase:
     purchase = await get_sql_purchase(purchase_id=purchase_id, sql_session=sql_session)
 
-    if not purchase: 
+    if not purchase:
         raise HTTPException(status_code=404, detail="Purchase not found")
-    
+
     return purchase
+
 
 # Endpoint which raises custom headers and detail if exception hit
 # returns response object after building response from two repo queries
@@ -91,11 +100,30 @@ async def create_purchase_from_item_and_user(
 
     return await create_purchase(purchase=purchase, sql_session=sql_session)
 
+
+@app.patch("/purchases/{purchase_id}")
+async def patch_purchase(
+    purchase_id: int, purchase_update: PurchaseUpdate, sql_session: SQL_SESSION
+) -> Purchase:
+    try:
+        purchase = await update_purchase(
+            purchase_id=purchase_id,
+            purchase_update=purchase_update,
+            sql_session=sql_session,
+        )
+    except PurchaseNotFoundException:
+        raise HTTPException(status_code=404, detail="Purchase not found")
+
+    return purchase
+
+
 @app.delete("/purchases")
 async def delete_purchase(purchase_id: int, sql_session: SQL_SESSION) -> Purchase:
     try:
-        purchase = await delete_sql_purchase(purchase_id=purchase_id, sql_session=sql_session)
+        purchase = await delete_sql_purchase(
+            purchase_id=purchase_id, sql_session=sql_session
+        )
     except PurchaseNotFoundException:
         raise HTTPException(status_code=404, detail="Purchase not found")
-    
+
     return purchase
