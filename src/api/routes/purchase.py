@@ -10,7 +10,6 @@ from models.purchase import Purchase
 from models.user import User
 
 from repository.legacy.item import get_item_by_id
-from repository.legacy.purchase import get_purchases_by_user_id
 from repository.legacy.user import get_user_by_id
 
 from repository.sql.db.sqlite import SQL_SESSION
@@ -20,6 +19,7 @@ from repository.sql.models.purchase import (
     delete_purchase as delete_sql_purchase,
     get_purchase as get_sql_purchase,
     get_purchases as get_sql_purchases,
+    get_purchases_by_user_id,
     update_purchase,
     PurchaseUpdate,
 )
@@ -50,8 +50,8 @@ async def get_purchase(purchase_id: int, sql_session: SQL_SESSION) -> Purchase:
 # Endpoint which raises custom headers and detail if exception hit
 # returns response object after building response from two repo queries
 @app.get("/purchases/user/{user_id}")
-async def get_purchases_by_user(user_id: int) -> GetPurchasesResponse:
-    purchases = get_purchases_by_user_id(user_id=user_id)
+async def get_purchases_by_user(user_id: int, sql_session: SQL_SESSION) -> GetPurchasesResponse:
+    purchases = await get_purchases_by_user_id(user_id=user_id, sql_session=sql_session)
 
     user = get_user_by_id(user_id=user_id)
 

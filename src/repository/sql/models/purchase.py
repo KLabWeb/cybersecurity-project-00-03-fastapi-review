@@ -81,6 +81,13 @@ async def get_purchases(
     return translate_purchases_to_domain(result.all())  # return all rows
 
 
+async def get_purchases_by_user_id(user_id: int, sql_session: SQL_SESSION) -> list[DomainPurchase]:
+    statement = select(Purchase).where(Purchase.user_id == user_id)
+    result = sql_session.exec(statement)
+    
+    return translate_purchases_to_domain(result.all())
+
+
 async def update_purchase(
     purchase_id: int, purchase_update: PurchaseUpdate, sql_session: SQL_SESSION
 ) -> DomainPurchase:
