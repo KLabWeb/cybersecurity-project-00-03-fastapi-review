@@ -12,6 +12,8 @@ RUN pip install --no-cache-dir --root-user-action=ignore -r requirements.txt
 # data/sqlite is not copied - the DB file is supplied at runtime by the compose volume
 COPY src ./src
 COPY data/legacy ./data/legacy
+# pytest.ini supplies pythonpath and testpaths, so the suite runs inside the container too
+COPY pytest.ini ./
 EXPOSE 8080
 
 # Put the app root on the import path so the data layer resolves as data.legacy.*

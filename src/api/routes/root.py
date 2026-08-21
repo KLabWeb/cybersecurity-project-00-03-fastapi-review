@@ -15,7 +15,7 @@ async def get_root(
     tracking_cookie: Annotated[TrackingCookie, Cookie()],
     header: Annotated[RootHeader, Header()],
 ) -> dict[str, str]:
-    return {"Hello": "World"}
+    return {"msg": "Hello, world"}
 
 
 # Response re-directs to another URL

@@ -5,3 +5,5 @@ pwdlib[argon2]==0.3.0
 pyjwt==2.13.0
 python-multipart==0.0.32
 sqlmodel==0.0.39
+httpx==0.28.1
+pytest==9.1.1
