@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 
 from models.user import User
-from security.auth.verify import ADMIN, STAFF
 
 
 class PasswordVerificationUserRequest(User):

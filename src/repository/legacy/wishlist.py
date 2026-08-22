@@ -1,5 +1,4 @@
 from data.legacy.wishlist import raw_wishlists
-from models.item import Item
 from models.wishlist import Wishlist
 from models.user import User
 
