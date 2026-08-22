@@ -10,7 +10,7 @@ from repository.legacy.user import get_user_by_username
 # Module for building and verifying user authentication details
 # via mock token system
 
-OAUTH2_SCHEME = Annotated[str, Depends(OAuth2PasswordBearer(tokenUrl="token"))]
+OAUTH2_SCHEME = Annotated[str, Depends(OAuth2PasswordBearer(tokenUrl="login"))]
 
 MOCK_SECRET_KEY = "mock-secret"
 TOKEN_EXPIRE = datetime.now() + timedelta(days=2)

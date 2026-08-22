@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends, Form, HTTPException, Path, Request
+from fastapi import Depends, Form, HTTPException, Path, Request, Response
 from fastapi.responses import PlainTextResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -14,11 +14,16 @@ from api.models.users import (
 from models.exception import DangerousUserIDException
 from models.item import UserID
 from models.user import User, Token
-from repository.legacy.user import get_user_by_id as repo_get_user_by_id, get_user_by_username as repo_get_user_by_username, patch_updated_user
+from repository.legacy.user import (
+    get_user_by_id as repo_get_user_by_id,
+    get_user_by_username as repo_get_user_by_username,
+    patch_updated_user,
+)
 from security.auth.verify import authenticate_user, ADMIN, STAFF
 from security.auth.legacy import AUTH_AND_GET_CURRENT_USER as LEGACY_AUTH
 from security.auth.jwt import AUTH_AND_GET_CURRENT_USER as JWT_AUTH
-from security.auth.jwt import create_access_token
+from security.auth.jwt import create_access_token, set_token_cookie
+
 
 # First endpoint
 @app.get("/users/{user_id}")
@@ -34,9 +39,7 @@ async def get_user_by_id(user_id: Annotated[UserID, Path()]) -> User:
 # Uses legacy auth flow AUTH_AND_GET_CURRENT_USER
 # Auth verifies token, then gets user
 @app.get("/users/username/{username}")
-async def get_user_by_username(
-    username: str, current_user: LEGACY_AUTH
-) -> User:
+async def get_user_by_username(username: str, current_user: LEGACY_AUTH) -> User:
     if current_user is None:
         raise HTTPException(
             status_code=401,
@@ -79,18 +82,31 @@ async def update_user_by_username(
 
 
 @app.post("/login")
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
-    user_record = repo_get_user_by_username(form_data.username)    
+async def login(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()], response: Response
+) -> Token:
+    user_record = repo_get_user_by_username(form_data.username)
     if user_record is None:
-        raise HTTPException(status_code=401, detail="Incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
-    
+        raise HTTPException(
+            status_code=401,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     if not authenticate_user(user_record.username, form_data.password):
-        raise HTTPException(status_code=401, detail="Incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
-    
+        raise HTTPException(
+            status_code=401,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     access_token = create_access_token(data={"sub": user_record.username})
+
+    set_token_cookie(access_token=access_token, response=response)
+
     return Token(access_token=access_token, token_type="bearer")
-    
-    
+
+
 # Path which reads in a Form and stores in memory
 @app.post("/form_login")
 async def login_via_form(
@@ -98,7 +114,9 @@ async def login_via_form(
 ) -> LoginFormResponse:
     user_record = repo_get_user_by_username(form_data.username)
 
-    if user_record is None or not authenticate_user(user_record.username, form_data.password):
+    if user_record is None or not authenticate_user(
+        user_record.username, form_data.password
+    ):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     return LoginFormResponse(username=form_data.username)

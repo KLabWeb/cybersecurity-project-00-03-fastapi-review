@@ -6,7 +6,8 @@ services:
       - "5678:5678"
     environment:
       - APP_ENV=${APP_ENV}
-      - DEBUG=${DEBUG:-0}
+      - "DEBUG=${DEBUG:-0}"
+      - "DEBUG_WAIT=${DEBUG_WAIT:-0}"
       - "PYDEVD_DISABLE_FILE_VALIDATION=1"
     volumes:
       - ./data:/usr/local/app/data

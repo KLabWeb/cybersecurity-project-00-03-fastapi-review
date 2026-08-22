@@ -49,7 +49,7 @@ The app is containerized with a modified config from my [Docker review project](
 
 ## Tutorial Progress
 
-Currently done through **section 46: Debugging**. Checked = done. **Sections completed = 46 / 55 = 83.6%**
+Currently done through **section 47: Response Cookies**. Checked = done. **Sections completed = 47 / 55 = 85.5%**
 ### Prereqs
 Basic python review for types and concurrency
 - [x] [Python Types](https://fastapi.tiangolo.com/python-types/)
@@ -128,7 +128,7 @@ Splitting into multiple files, testing, and debugging.
 
 ### Advanced User Guide
 The docs' separate Advanced guide (the docs themselves note these are "not necessarily advanced").
-- [ ] [Response Cookies](https://fastapi.tiangolo.com/advanced/response-cookies/)
+- [x] [Response Cookies](https://fastapi.tiangolo.com/advanced/response-cookies/)
 - [ ] [Response Headers](https://fastapi.tiangolo.com/advanced/response-headers/)
 - [ ] [Advanced Dependencies](https://fastapi.tiangolo.com/advanced/advanced-dependencies/)
 - [ ] [Advanced Security](https://fastapi.tiangolo.com/advanced/security/)
