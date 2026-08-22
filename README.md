@@ -49,7 +49,7 @@ The app is containerized with a modified config from my [Docker review project](
 
 ## Tutorial Progress
 
-Currently done through **section 45: Testing**. Checked = done. **Sections completed = 45 / 55 = 81.8%**
+Currently done through **section 46: Debugging**. Checked = done. **Sections completed = 46 / 55 = 83.6%**
 ### Prereqs
 Basic python review for types and concurrency
 - [x] [Python Types](https://fastapi.tiangolo.com/python-types/)
@@ -124,7 +124,7 @@ The cross-cutting stuff that matters most once an API is real — middleware, CO
 Splitting into multiple files, testing, and debugging.
 - [x] [Bigger Applications - Multiple Files](https://fastapi.tiangolo.com/tutorial/bigger-applications/)
 - [x] [Testing](https://fastapi.tiangolo.com/tutorial/testing/)
-- [ ] [Debugging](https://fastapi.tiangolo.com/tutorial/debugging/)
+- [x] [Debugging](https://fastapi.tiangolo.com/tutorial/debugging/)
 
 ### Advanced User Guide
 The docs' separate Advanced guide (the docs themselves note these are "not necessarily advanced").
