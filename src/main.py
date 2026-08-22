@@ -17,8 +17,17 @@ from api.routes.item import router as item_router
 # add storage to app
 from repository import init_storage
 
+# to allow debugging
+import debugpy
+import os
+
 # apply items routes to app routes
 app.include_router(item_router)
+
+if os.getenv("DEBUG") == "1":
+    debugpy.listen(("0.0.0.0", 5678))
+    if os.getenv("DEBUG_WAIT") == "1":
+        debugpy.wait_for_client()
 
 # init storage
 @app.on_event("startup")

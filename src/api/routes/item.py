@@ -176,7 +176,7 @@ async def update_item_color(item_id: int, color: Color) -> Item:
 
 
 # Path which uses a query param to filter items chepaer than max_price
-@router.get("/")
+@router.get("/cheap")
 async def get_cheap_items(max_price: float) -> list[Item]:
     return get_items_below_price(max_price=max_price)
 
