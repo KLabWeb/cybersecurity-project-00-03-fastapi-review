@@ -49,7 +49,7 @@ The app is containerized with a modified config from my [Docker review project](
 
 ## Tutorial Progress
 
-Currently done through **section 50: Advanced Security**. Checked = done. **Sections completed = 50 / 55 = 90.1%**
+Currently done through **section 50: Advanced Security - OAuth2 scopes**. Checked = done. **Sections completed = 50 / 54 = 92.6%**
 ### Prereqs
 Basic python review for types and concurrency
 - [x] [Python Types](https://fastapi.tiangolo.com/python-types/)
@@ -131,8 +131,7 @@ The docs' separate Advanced guide (the docs themselves note these are "not neces
 - [x] [Response Cookies](https://fastapi.tiangolo.com/advanced/response-cookies/)
 - [x] [Response Headers](https://fastapi.tiangolo.com/advanced/response-headers/)
 - [x] [Advanced Dependencies](https://fastapi.tiangolo.com/advanced/advanced-dependencies/)
-- [x] [Advanced Security](https://fastapi.tiangolo.com/advanced/security/)
-- [ ] [Advanced Security - OAuth2 scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/)
+- [x] [Advanced Security - OAuth2 scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/)
 - [ ] [Behind a Proxy](https://fastapi.tiangolo.com/advanced/behind-a-proxy/)
 - [ ] [Testing Dependencies with Overrides](https://fastapi.tiangolo.com/advanced/testing-dependencies/)
 - [ ] [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)

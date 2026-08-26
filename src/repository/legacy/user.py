@@ -15,6 +15,7 @@ class UserRole(Enum):
 class UserRecord(User):
     role: UserRole
     hashed_password: str
+    scopes: list[str] = []
 
 
 test_users: list[UserRecord] = [
@@ -27,7 +28,8 @@ def get_user_record_by_id(user_id: int) -> UserRecord | None:
     for test_user in test_users:
         if test_user.id == user_id:
             return test_user
-        
+
+
 def get_user_record_by_username(username: str) -> UserRecord | None:
     for test_user in test_users:
         if test_user.username == username:
@@ -70,7 +72,9 @@ def patch_updated_user(user_id: int, user: User) -> User | None:
     for index, test_user in enumerate(test_users):
         if test_user.id == user_id:
             no_default_val_user = user.model_dump(exclude_unset=True, exclude={"id"})
+            
             updated_existing_user = test_user.model_copy(update=no_default_val_user)
+            
             test_users[index] = updated_existing_user
 
             return updated_existing_user
