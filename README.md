@@ -1,12 +1,14 @@
 # Phase 0: FastAPI Review - Official Docs Refresher API
 
-This is the app I am building as I read and work through the remainder of the [FastAPI tutorial](https://fastapi.tiangolo.com/tutorial/) I did not complete while at my previous full-stack software engineer role as a refresher and wrap-up.
+This was the app I was building as I read and worked through the remainder of the [FastAPI tutorial](https://fastapi.tiangolo.com/tutorial/) I did not complete while at my previous full-stack software engineer role as a refresher and wrap-up for my previous software engineering work.
 
-This is a big work-in-progress, and the app itself changes a lot as I go — models get reworked, files get split up, and endpoints come and go with each new chapter. This README thus tracks the tutorial and what it teaches, rather than whatever my code happens to look like at any given chapter.
+This app was a big work-in-progress, based on the docs, which taught via a "teach the concept, not best practices" manner for most of the material — as such, throughout the project, models got reworked, files got split up, and endpoints came and went with each new chapter. This README tracks the tutorial and what I leared from it, through the code that I built along the way, as seen via this FastAPI REST API.
 
-The API is live on Digital Ocean, which re-deploys each time I push an update to this GitHub repo. Play around with via the interactive [OpenAPI Swagger docs](https://cyb-project-00-03-fastapi-app-3qxik.ondigitalocean.app/docs) for it.
+Note, that some security violations have intentionally been left in this app, as this app will serve as a testing ground for later phase work. There are some weird things here, scopes enforced on some routes, ignored on others, a mix of legacy hardcoded and SQL data, dependencies here but not there, and so forth, but the goal of building this app was never to have a proper production ready API, but rather one that I slowly built on itself and improved in parts as I worked through the official FastAPI docs, as a teach application.
 
-See the notes I am taking while completing the official docs [here](https://github.com/KLabWeb/cybersecurity-notes/blob/main/Phase%2000/00-03%20FastAPI%20Notes.pdf). New notes start from section "04. Request Body" and onwards. I also updated the old notes with up-to-date info in places where the tutorial was updated.
+This API is live on Digital Ocean. Play around with via the interactive [OpenAPI Swagger docs](https://cyb-project-00-03-fastapi-app-3qxik.ondigitalocean.app/docs) for it.
+
+Also, see the notes I took while completing the official docs [here](https://github.com/KLabWeb/cybersecurity-notes/blob/main/Phase%2000/00-03%20FastAPI%20Notes.pdf).
 
 ## Design for this Project
 Concepts implemented in this API are built from what the official FastAPI docs tutorial teaches. Unlike the official docs, though, I designed this API using strict Domain-Driven Design principles and layers.
