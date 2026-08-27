@@ -47,9 +47,6 @@ Each layer owns its own models, data access and manipulation, data interpretatio
 
 The app is containerized with a modified config from my [Docker review project](https://github.com/KLabWeb/cybersecurity-project-00-04-docker-review) — Uvicorn behind a Dockerfile, and a Compose file with live-reload — so `docker compose up` runs the app, with the interactive Swagger docs at `/docs` to try out every endpoint I've built so far.
 
-## Tutorial Progress
-
-Currently done through **section 50: Advanced Security - OAuth2 scopes**. Checked = done. **Sections completed = 50 / 54 = 92.6%**
 ### Prereqs
 Basic python review for types and concurrency
 - [x] [Python Types](https://fastapi.tiangolo.com/python-types/)
@@ -132,10 +129,6 @@ The docs' separate Advanced guide (the docs themselves note these are "not neces
 - [x] [Response Headers](https://fastapi.tiangolo.com/advanced/response-headers/)
 - [x] [Advanced Dependencies](https://fastapi.tiangolo.com/advanced/advanced-dependencies/)
 - [x] [Advanced Security - OAuth2 scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/)
-- [ ] [Behind a Proxy](https://fastapi.tiangolo.com/advanced/behind-a-proxy/)
-- [ ] [Testing Dependencies with Overrides](https://fastapi.tiangolo.com/advanced/testing-dependencies/)
-- [ ] [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)
-- [ ] [Strict Content-Type Checking](https://fastapi.tiangolo.com/advanced/strict-content-type/)
 
 ## Related
 
