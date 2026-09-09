@@ -133,8 +133,8 @@ The docs' separate Advanced guide (the docs themselves note these are "not neces
 - [x] [Advanced Security - OAuth2 scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/)
 - [x] [Behind a Proxy](https://fastapi.tiangolo.com/advanced/behind-a-proxy/)
 - [x] [Testing Dependencies with Overrides](https://fastapi.tiangolo.com/advanced/testing-dependencies/)
-- [ ] [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)
-- [ ] [Strict Content-Type Checking](https://fastapi.tiangolo.com/advanced/strict-content-type/)
+- [x] [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)
+- [x] [Strict Content-Type Checking](https://fastapi.tiangolo.com/advanced/strict-content-type/)
 
 ## Related
 
