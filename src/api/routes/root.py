@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Cookie, Header
+from fastapi import Cookie, Header, Request
 from fastapi.responses import RedirectResponse
 
 from app import app
@@ -14,8 +14,12 @@ from models.header import RootHeader
 async def get_root(
     tracking_cookie: Annotated[TrackingCookie, Cookie()],
     header: Annotated[RootHeader, Header()],
-) -> dict[str, str]:
-    return {"msg": "Hello, world"}
+    request: Request,
+) -> dict:
+    return {
+        "msg": "Hello, world",
+        "root_path": request.scope.get("root_path")
+    }
 
 
 # Response re-directs to another URL

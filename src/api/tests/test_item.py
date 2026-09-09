@@ -1,9 +1,16 @@
+from fastapi import Response
 from fastapi.testclient import TestClient
 
+from api.dependencies.header import get_secret_header
 from main import app
 
 client = TestClient(app)
 
+
+# Stand-in for get_secret_header
+# Assume this is another secret header service provider we are testing before implementing
+async def override_get_secret_header(response: Response) -> None:
+    response.headers["secret"] = "New secret header"
 
 def test_get_item():
     response = client.get("/items/0")
@@ -43,3 +50,10 @@ def test_compare_item_prices():
 def test_compare_item_prices_requires_two_ids():
     response = client.get("/items/price-comparison", params={"item_id": [0]})
     assert response.status_code == 422
+
+app.dependency_overrides[get_secret_header] = override_get_secret_header
+
+def test_overriden_get_secret_header():
+    response = client.get("items/0")
+    assert response.status_code == 200
+    assert response.headers["secret"] == "New secret header"
