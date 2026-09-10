@@ -1,16 +1,18 @@
 from typing import Annotated
 
-from fastapi import Cookie, Header, Request
+from fastapi import APIRouter, Cookie, Header, Request
 from fastapi.responses import RedirectResponse
 
-from app import app
 from models.cookie import TrackingCookie
 from models.header import RootHeader
 
+router = APIRouter(
+    tags=["root"],
+)
 
 # Most basic GET path to get root of API
 # Takes in ookie model and Header model
-@app.get("/")
+@router.get("/")
 async def get_root(
     tracking_cookie: Annotated[TrackingCookie, Cookie()],
     header: Annotated[RootHeader, Header()],
@@ -23,6 +25,6 @@ async def get_root(
 
 
 # Response re-directs to another URL
-@app.get("/teleport")
+@router.get("/teleport")
 async def get_teleport() -> RedirectResponse:
     return RedirectResponse(url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")

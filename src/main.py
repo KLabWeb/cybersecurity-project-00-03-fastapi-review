@@ -12,7 +12,12 @@ import api.routes.user
 import api.routes.wishlist
 
 # add routes to app via APIRouter
+from api.routes.file import router as file_router
 from api.routes.item import router as item_router
+from api.routes.purchase import router as purchase_router
+from api.routes.root import router as root_router
+from api.routes.user import router as user_router
+from api.routes.wishlist import router as wishlist_router
 
 # add storage to app
 from repository import init_storage
@@ -22,7 +27,12 @@ import debugpy
 import os
 
 # apply items routes to app routes
+app.include_router(file_router)
 app.include_router(item_router)
+app.include_router(purchase_router)
+app.include_router(root_router)
+app.include_router(user_router)
+app.include_router(wishlist_router)
 
 if os.getenv("DEBUG") == "1":
     debugpy.listen(("0.0.0.0", 5678))

@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends, Form, HTTPException, Path, Request, Response
+from fastapi import APIRouter, Depends, Form, HTTPException, Path, Request, Response
 from fastapi.responses import PlainTextResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -31,9 +31,12 @@ from security.auth.jwt import (
     TokenData,
 )
 
+router = APIRouter(
+    tags=["users"],
+)
 
 # First endpoint
-@app.get("/users/{user_id}")
+@router.get("/users/{user_id}")
 async def get_user_by_id(user_id: Annotated[UserID, Path()]) -> User:
     existing_item = repo_get_user_by_id(user_id)
 
@@ -45,7 +48,7 @@ async def get_user_by_id(user_id: Annotated[UserID, Path()]) -> User:
 
 # Uses legacy auth flow AUTH_AND_GET_CURRENT_USER
 # Auth verifies token, then gets user
-@app.get("/users/username/{username}")
+@router.get("/users/username/{username}")
 async def get_user_by_username(username: str, current_user: LEGACY_AUTH) -> User:
     if current_user is None:
         raise HTTPException(
@@ -64,7 +67,7 @@ async def get_user_by_username(username: str, current_user: LEGACY_AUTH) -> User
 
 # Uses JWT auth flow AUTH_AND_GET_CURRENT_USER
 # Auth verifies token, then patches the user found by username
-@app.patch("/users/username/{username}")
+@router.patch("/users/username/{username}")
 async def update_user_by_username(
     username: str, user: User, current_user: JWT_AUTH_ADMIN
 ) -> User:
@@ -82,7 +85,7 @@ async def update_user_by_username(
     return updated_user
 
 
-@app.patch("/users/")
+@router.patch("/users/current")
 async def update_current_user(user: User, current_user: JWT_AUTH_STAFF) -> User:
     updated_user = patch_updated_user(user_id=current_user.id, user=user)
 
@@ -92,7 +95,7 @@ async def update_current_user(user: User, current_user: JWT_AUTH_STAFF) -> User:
     return updated_user
 
 
-@app.post("/login")
+@router.post("/login")
 async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], response: Response
 ) -> Token:
@@ -125,7 +128,7 @@ async def login(
 
 
 # Path which reads in a Form and stores in memory
-@app.post("/form_login")
+@router.post("/form-login")
 async def login_via_form(
     form_data: Annotated[LoginFormRequest, Form()],
 ) -> LoginFormResponse:
@@ -140,8 +143,8 @@ async def login_via_form(
 
 
 # Path which patches user via selective updating of model props
-@app.patch("/users/{user_id}")
-async def update_user(user_id: int, user: User) -> User:
+@router.patch("/users/{user_id}")
+async def update_user(user_id: Annotated[UserID, Path()], user: User) -> User:
     updated_user = patch_updated_user(user_id=user_id, user=user)
 
     if updated_user is None:
@@ -152,7 +155,7 @@ async def update_user(user_id: int, user: User) -> User:
 
 # Do not return a bool for auth like this but a Token, instead
 # Not up to auth section in docs yet, so this works as a placeholder to demonstrate model inheritance section of docs
-@app.post("/users/auth/verify")
+@router.post("/users/auth/verify")
 async def verify_user_password(user: PasswordVerificationUserRequest) -> bool:
     if not authenticate_user(user.username, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
@@ -161,9 +164,9 @@ async def verify_user_password(user: PasswordVerificationUserRequest) -> bool:
 
 
 # Endpoint which uses a class instance as a dependency
-@app.get("/users/roles/verify")
+@router.get("/users/{user_id}/roles")
 async def verify_user_roles(
-    user_id: int,
+    user_id: Annotated[UserID, Path()],
     is_staff: Annotated[bool, Depends(STAFF)],
     is_admin: Annotated[bool, Depends(ADMIN)],
 ) -> UserRoleVerificationResponse:

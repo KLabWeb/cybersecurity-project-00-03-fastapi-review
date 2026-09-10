@@ -13,7 +13,6 @@ from api.models.items import (
     GetItemQueryFilter,
     GetItemResponse,
     GetItemsQueryFilter,
-    ItemActionTags,
     ItemPriceInfoMetadata,
     UpdateItemResponse,
     ItemsJSONResponse,
@@ -33,7 +32,7 @@ from repository.legacy.item import (
 
 router = APIRouter(
     prefix="/items",
-    tags=["items", "FastAPI_tutorial"],
+    tags=["items"],
     dependencies=[SECRET_HEADER],
     responses={404: {"description": "Not found"}},
 )
@@ -54,12 +53,12 @@ async def get_items(
 # Obvisouly never define an endpoint like this (to just get two items) in a real system
 @router.get("/price-comparison")
 async def compare_item_prices(
-    id: Annotated[CompareItemsPricesQueryFilter, Query()],
+    filter_query: Annotated[CompareItemsPricesQueryFilter, Query()],
 ) -> CompareItemPricesResponse:
     current_datetime = datetime.now()
 
-    first_item = get_item_by_id(id.id[0])
-    second_item = get_item_by_id(id.id[1])
+    first_item = get_item_by_id(filter_query.id[0])
+    second_item = get_item_by_id(filter_query.id[1])
 
     if first_item is None or second_item is None:
         raise HTTPException(status_code=404, detail="One or both items not found")
@@ -104,6 +103,12 @@ async def get_items_as_json() -> ItemsJSONResponse:
     return ItemsJSONResponse(items=items_str)
 
 
+# Path which uses a query param to filter items chepaer than max_price
+@router.get("/cheap")
+async def get_cheap_items(max_price: float) -> list[Item]:
+    return get_items_below_price(max_price=max_price)
+
+
 # Path takes path parameter to ID resource and get specific item
 # ItemID carries the bounds validation via Path validation
 # Regex Query validator checks if query has a least one letter
@@ -132,7 +137,7 @@ async def get_item(
 
 # Path which creates item via request body details
 # Uses status to help fine proper status code to return
-@router.post("/", status_code=status.HTTP_201_CREATED, tags=[ItemActionTags.CREATE])
+@router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_item(item: Item) -> Item:
     """
     Create an item with all the information:
@@ -150,7 +155,7 @@ async def create_item(item: Item) -> Item:
 # Also sets int to be embeded object inside request body
 @router.put("/{item_id}")
 async def update_item(
-    item_id: int, item: Annotated[Item, Body(embed=True)]
+    item_id: Annotated[ItemID, Path()], item: Annotated[Item, Body(embed=True)]
 ) -> UpdateItemResponse:
     updated_item = replace_item(item_id=item_id, item=item)
     if updated_item is None:
@@ -166,7 +171,9 @@ async def update_item(
 
 # Path which only allows setting specific color names for updating color only
 @router.patch("/{item_id}/color")
-async def update_item_color(item_id: int, color: Color) -> Item:
+async def update_item_color(
+    item_id: Annotated[ItemID, Path()], color: Color
+) -> Item:
     updated_item = repo_update_item_color(item_id=item_id, color=color)
 
     if updated_item is None:
@@ -175,18 +182,12 @@ async def update_item_color(item_id: int, color: Color) -> Item:
     return updated_item
 
 
-# Path which uses a query param to filter items chepaer than max_price
-@router.get("/cheap")
-async def get_cheap_items(max_price: float) -> list[Item]:
-    return get_items_below_price(max_price=max_price)
-
-
 # Path which uses path param, query param, and request body
 # Path param gets item, query param filters item, request body gives update data
 # Really don't need to pass in whole item here, but works for tutorial purposes
-@router.patch("/{item_id}")
+@router.patch("/{item_id}", deprecated=True)
 async def set_offer_if_item_expensive(
-    item_id: int, item: Item, expensive_price: float, deprecated=True
+    item_id: Annotated[ItemID, Path()], item: Item, expensive_price: float
 ) -> Item:
     updated_item = set_offer_if_expensive(
         item_id=item_id, item=item, expensive_price=expensive_price

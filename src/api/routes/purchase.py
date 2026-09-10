@@ -1,11 +1,10 @@
 from typing import Annotated
 
-from fastapi import Body, HTTPException, Query
+from fastapi import APIRouter, Body, HTTPException, Query
 
-from app import app
 from api.models.purchases import GetPurchasesResponse
 from models.exception import PurchaseNotFoundException
-from models.item import Item
+from models.item import Item, UserID
 from models.purchase import Purchase
 from models.user import User
 
@@ -24,10 +23,13 @@ from repository.sql.models.purchase import (
     PurchaseUpdate,
 )
 
+router = APIRouter(
+    tags=["purchases"],
+)
 
 # Path which returns all purchases
 # Uses limit and offset to paginate results
-@app.get("/purchases")
+@router.get("/purchases")
 async def get_purchases(
     sql_session: SQL_SESSION,
     offset: int = 0,
@@ -37,21 +39,11 @@ async def get_purchases(
     return await get_sql_purchases(offset=offset, limit=limit, sql_session=sql_session)
 
 
-@app.get("/users/purchases/{purchase_id}")
-async def get_purchase(purchase_id: int, sql_session: SQL_SESSION) -> Purchase:
-    purchase = await get_sql_purchase(purchase_id=purchase_id, sql_session=sql_session)
-
-    if not purchase:
-        raise HTTPException(status_code=404, detail="Purchase not found")
-
-    return purchase
-
-
 # Endpoint which raises custom headers and detail if exception hit
 # returns response object after building response from two repo queries
-@app.get("/purchases/user/{user_id}")
+@router.get("/purchases/by-user")
 async def get_purchases_by_user(
-    user_id: int, sql_session: SQL_SESSION
+    user_id: Annotated[UserID, Query()], sql_session: SQL_SESSION
 ) -> GetPurchasesResponse:
     purchases = await get_purchases_by_user_id(user_id=user_id, sql_session=sql_session)
 
@@ -74,15 +66,25 @@ async def get_purchases_by_user(
     return GetPurchasesResponse(user=user, items_purchased=items_purchased)
 
 
+@router.get("/purchases/{purchase_id}")
+async def get_purchase(purchase_id: int, sql_session: SQL_SESSION) -> Purchase:
+    purchase = await get_sql_purchase(purchase_id=purchase_id, sql_session=sql_session)
+
+    if not purchase:
+        raise HTTPException(status_code=404, detail="Purchase not found")
+
+    return purchase
+
+
 # Path takes in two request bodies to create Purchase (an Item & User)
 # Uses Body to pass in request body with only single primitive value
 # Don't actually need two objects passed in here, as could just pass in IDs, but works for tutorial demo purposes
-@app.put("/purchases", response_model=Purchase)
+@router.post("/purchases", response_model=Purchase)
 async def create_purchase_from_item_and_user(
     user: User,
     item: Item,
     manager_discount: Annotated[bool, Body()],
-    secret_tracking_id: str,
+    secret_tracking_id: Annotated[str, Body()],
     sql_session: SQL_SESSION,
 ) -> Purchase:
     user_record = get_user_by_id(user_id=user.id)
@@ -103,7 +105,7 @@ async def create_purchase_from_item_and_user(
     return await create_purchase(purchase=purchase, sql_session=sql_session)
 
 
-@app.patch("/purchases/{purchase_id}")
+@router.patch("/purchases/{purchase_id}")
 async def patch_purchase(
     purchase_id: int, purchase_update: PurchaseUpdate, sql_session: SQL_SESSION
 ) -> Purchase:
@@ -119,7 +121,7 @@ async def patch_purchase(
     return purchase
 
 
-@app.delete("/purchases")
+@router.delete("/purchases/{purchase_id}")
 async def delete_purchase(purchase_id: int, sql_session: SQL_SESSION) -> Purchase:
     try:
         purchase = await delete_sql_purchase(
