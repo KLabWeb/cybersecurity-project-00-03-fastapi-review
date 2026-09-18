@@ -1,6 +1,6 @@
 # Phase 0: FastAPI Review - Official Docs Refresher API
 
-I built this app while working through the remainder of the [FastAPI tutorial](https://fastapi.tiangolo.com/tutorial/), the part I had not completed during my previous full-stack role, as a refresher and a wrap-up of that work.
+I built this app while working through the remainder of the [FastAPI tutorial](https://fastapi.tiangolo.com/tutorial/) that I had not completed during my previous full-stack software engineer role, as a refresher and a wrap-up of that work.
 
 This app was a big work-in-progress, based on the docs, which taught via a "teach the concept, not best practices" manner for most of the material — as such, throughout the project, models got reworked, files got split up, and endpoints came and went with each new chapter. This README tracks the tutorial and what I learned from it, through the code that I built along the way, as seen via this FastAPI REST API.
 
