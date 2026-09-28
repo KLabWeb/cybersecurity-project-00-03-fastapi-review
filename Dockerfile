@@ -15,7 +15,7 @@ COPY data/legacy ./data/legacy
 RUN mkdir -p data/sqlite
 # pytest.ini supplies pythonpath and testpaths, so the suite runs inside the container too
 COPY pytest.ini ./
-EXPOSE 8080
+EXPOSE 8000
 
 # Put the app root on the import path so the data layer resolves as data.legacy.*
 # uvicorn's --app-dir only covers src, which leaves data/ unreachable
@@ -23,4 +23,4 @@ ENV PYTHONPATH=/usr/local/app
 
 # Set default command to start univorn server when container starts
 # Plus look for app.main for app to serve, set default interface, and set listening port
-CMD ["uvicorn", "main:app", "--app-dir", "src", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "main:app", "--app-dir", "src", "--host", "0.0.0.0", "--port", "8000"]
